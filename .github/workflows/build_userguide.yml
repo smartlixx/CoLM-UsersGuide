@@ -17,5 +17,5 @@ jobs:
           - name: Upload PDF file
             uses: actions/upload-artifact@v4
             with:
-              name: CoLM-UserGuide
-              path: CoLM202X-UserGuide.pdf
+              name: CoLM-UsersGuide
+              path: CoLM202X-UsersGuide.pdf
