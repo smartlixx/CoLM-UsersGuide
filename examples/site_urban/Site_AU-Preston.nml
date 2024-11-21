@@ -1,0 +1,103 @@
+&nl_colm
+
+! Description : an example for Urban SinglePoint with surface data
+!               partly from database instead of observations
+
+! --------------------------------------------------------------------
+! (1) Casename, site data, time period and step, directories
+
+   DEF_CASE_NAME = 'AU-Preston'
+
+   ! surface data from SITE.
+   SITE_fsrfdata = '/path/to/AU-Preston_srfdata.nc'
+
+   ! true  : surface data from SITE in $SITE_fsrfdata
+   ! false : surface data is retrieved from rawdata database.
+   USE_SITE_lakedepth         = .false.
+   USE_SITE_soilreflectance   = .false.
+   USE_SITE_soilparameters    = .false.
+   USE_SITE_topography        = .false.
+   USE_SITE_urban_paras       = .true.
+   USE_SITE_thermal_paras     = .false.
+   USE_SITE_urban_LAI         = .false.
+
+   DEF_simulation_time%greenwich     = .true.
+   DEF_simulation_time%start_year    = 1992
+   DEF_simulation_time%start_month   = 12
+   DEF_simulation_time%start_day     = 31
+   DEF_simulation_time%start_sec     = 84600
+   DEF_simulation_time%end_year      = 2004
+   DEF_simulation_time%end_month     = 11
+   DEF_simulation_time%end_day       = 28
+   DEF_simulation_time%end_sec       = 45000
+   DEF_simulation_time%spinup_year   = 2003
+   DEF_simulation_time%spinup_month  = 8
+   DEF_simulation_time%spinup_day    = 12
+   DEF_simulation_time%spinup_sec    = 10800
+   DEF_simulation_time%spinup_repeat = 0
+
+   DEF_simulation_time%timestep      = 1800.
+
+   DEF_dir_rawdata = '/path/to/CoLMrawdata/'
+   DEF_dir_runtime = '/path/to/CoLMruntime/'
+   DEF_dir_output  = '/path/to/point_cases/'
+
+! --------------------------------------------------------------------
+! (2) Urban module options
+
+   DEF_URBAN_TREE     = .true.
+   DEF_URBAN_WATER    = .true.
+   DEF_URBAN_BEM      = .true.
+   DEF_URBAN_LUCY     = .true.
+   DEF_USE_CANYON_HWR = .false.
+
+! --------------------------------------------------------------------
+! (3) Makeing surface data
+
+   ! urban type: 1. NCAR Urban Classification
+   DEF_URBAN_type_scheme = 1   
+
+   DEF_LAI_CHANGE_YEARLY = .true. ! LAI changes yearly
+
+! --------------------------------------------------------------------
+! (4) Parameteration schemes 
+
+   ! ---- Canopy Interception scheme ----
+   DEF_Interception_scheme = 1 ! 1: CoLM Interception scheme
+   
+   ! ---- Hydrology module ----
+   DEF_USE_SUPERCOOL_WATER       = .false.
+   DEF_USE_VariablySaturatedFlow = .false.
+   DEF_USE_PLANTHYDRAULICS       = .false.
+   DEF_USE_WUEST                 = .false.
+   
+   ! ---- SNICAR ----
+   DEF_USE_SNICAR     = .false.
+   DEF_Aerosol_Readin = .true.
+   DEF_Aerosol_Clim   = .false.
+   
+   ! ---- Ozone MODULE ----
+   DEF_USE_OZONESTRESS = .false.
+   DEF_USE_OZONEDATA   = .false.
+   
+   ! ---- Split Soil Snow ----
+   DEF_SPLIT_SOILSNOW = .false.
+
+! --------------------------------------------------------------------
+! (5) Offline forcing
+
+   DEF_forcing_namelist = '/path/to/forcing/AU-Preston.nml'
+
+! --------------------------------------------------------------------
+! (6) Restart and History
+
+   DEF_WRST_FREQ = 'MONTHLY'     ! write restart file every month
+   DEF_REST_CompressLevel = 0    ! Do not compress data in file
+   
+   DEF_HIST_FREQ    = 'TIMESTEP' ! write history file every timestep
+   DEF_HIST_groupby = 'MONTH'    ! put one month's data in one file
+   DEF_HIST_CompressLevel = 0    ! Do not compress data in file
+   
+   DEF_hist_vars_out_default = .true. ! output all variables
+
+/ 

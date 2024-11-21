@@ -1,0 +1,63 @@
+&nl_colm
+
+! Description : an example for SinglePoint with surface data
+!               all from CoLM database 
+
+! --------------------------------------------------------------------
+! (1) Casename, site data, time period and step, directories
+
+   DEF_CASE_NAME = 'SiteSYSUAtmos_IGBP_VG'
+   
+   SITE_lon_location = 113.5897
+   SITE_lat_location = 22.3507
+   
+   USE_SITE_landtype        = .false.
+   USE_SITE_htop            = .false.
+   USE_SITE_LAI             = .false.
+   USE_SITE_soilreflectance = .false.
+   USE_SITE_soilparameters  = .false.
+   USE_SITE_topography      = .false.
+   
+   DEF_simulation_time%greenwich     = .TRUE.
+   DEF_simulation_time%start_year    = 1951
+   DEF_simulation_time%start_month   = 1
+   DEF_simulation_time%start_day     = 1
+   DEF_simulation_time%start_sec     = 0
+   DEF_simulation_time%end_year      = 2020
+   DEF_simulation_time%end_month     = 12
+   DEF_simulation_time%end_day       = 31
+   DEF_simulation_time%end_sec       = 86400
+   DEF_simulation_time%spinup_year   = 2000
+   DEF_simulation_time%spinup_month  = 1
+   DEF_simulation_time%spinup_day    = 1
+   DEF_simulation_time%spinup_sec    = 0
+   DEF_simulation_time%spinup_repeat = 2
+   
+   DEF_simulation_time%timestep      = 1800.
+   
+   DEF_dir_rawdata = '/path/to/CoLMrawdata/'
+   DEF_dir_runtime = '/path/to/CoLMruntime/'
+   DEF_dir_output  = '/path/to/cases'
+
+! --------------------------------------------------------------------
+! (2) LAI setting 
+
+   DEF_LAI_MONTHLY       = .true. ! monthly averaged LAI is used
+   DEF_LAI_CHANGE_YEARLY = .true. ! LAI change by year
+
+! --------------------------------------------------------------------
+! (3) Offline forcing
+
+   DEF_forcing_namelist = '/path/to/ERA5LAND.nml'
+
+! --------------------------------------------------------------------
+! (4) Restart and History
+
+   DEF_WRST_FREQ = 'MONTHLY'  ! write restart file every month
+   
+   DEF_HIST_FREQ    = 'DAILY' ! write history file every day
+   DEF_HIST_groupby = 'YEAR'  ! put one year's data in single file
+   
+   DEF_hist_vars_out_default = .true. ! output all variables
+
+/
