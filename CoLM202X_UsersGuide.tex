@@ -87,7 +87,7 @@
 \part{引言}
 \section{引言}
 
-通用陆面模式2024版(The Common Land Model 2024, CoLM 2024)是通用陆面模式的第四个版本（即CLM 1.0, CoLM 2004, CoLM 2014, CoLM 2024）。它是集模式、数据集、性能评估和高性能计算为一体的、自成体系且功能完备的陆面综合模拟研究平台，可广泛应用于数值天气预报/气候预测、水文水资源、生态环境、城市、农林牧等行业的科学研究和精细化业务，适用于多尺度（\textasciitilde 1米至\textasciitilde 100公里）应用。
+通用陆面模式2024版(The Common Land Model 2024, CoLM 2024)是通用陆面模式的第四个版本（即CLM 1.0, CoLM 2004, CoLM 2014, CoLM 2024）。它是集模式、数据集、性能评估和高性能计算为一体的、自成体系且功能完备的陆面综合模拟研究平台，可广泛应用于数值天气预报/气候预测、水文水资源、生态环境、城市、农林牧等行业的科学研究和精细化业务，适用于多尺度（\textasciitilde 1米至\textasciitilde 100千米）应用。
 
 CoLM 2024版有以下主要改进或新增，
 
@@ -110,17 +110,17 @@ CoLM 2024版有以下主要改进或新增，
 
 \subsection{代码基本结构}
 
-CoLM包含三个主要的程序：制作地表数据、制作初始场数据和主程序。三个程序是相互独立的，但需按顺序依次执行。
+CoLM包含三个主要的程序：制作地表数据、制作初始场数据和运行主程序。三个程序是相互独立的，一般情况下需按顺序依次执行。
 
-制作地表数据是指构建模式网格和次网格单元，以及由高分辨的原始数据聚合得到模式单元上的地表属性。CoLM可使用经纬度单元、非结构单元、流域单元和单点四种模式网格单元，网格单元进一步再细分为植被、城市、湿地、冰川和水体五大类次网格单元，其中，植被次网格单元可选择地表覆盖类型、植被功能型和植物群落三种网格植被结构中的一种进行表征。次网格是CoLM计算模拟的基本结构单元，在运行主程序前，需首先由高分辨率的原始数据进行升尺度获取模式单元上的地表属性。原始地表数据通常为1公里及以下的高分辨率数据，包括地表覆盖类型、植被结构及属性、土壤属性、高程数据、水文学数据和城市数据等。
+制作地表数据是指构建模式网格和次网格单元，以及由高分辨的原始数据聚合得到模式单元上的地表属性。CoLM可使用经纬度单元、非结构单元、流域单元和单点四种模式网格单元，网格单元进一步再细分为植被、城市、湿地、冰川和水体五大类次网格单元，其中，植被次网格单元可选择地表覆盖类型、植被功能型和植物群落三种网格植被结构中的一种进行表征。次网格是CoLM计算模拟的基本结构单元，在运行主程序前，需首先由高分辨率的原始数据进行升尺度获取模式单元上的地表属性。原始地表数据通常为1千米及以下的高分辨率数据，包括地表覆盖类型、植被结构及属性、土壤属性、高程数据、水文学数据和城市数据等。
 
-制作初始场数据是指构建模式的初始状态。初始状态分为冷启动和热启动两种，其中，冷启动指的是设定一个物理上合理的土壤水、土壤温度和积雪状态等数值，热启动指的是由外部数据读入已经运行过一段时间后的模式状态。冷启动设定简单，不需要额外的数据，但通常主程序需运行比热启动更长的时间，才能达到较为平衡的状态。
+制作初始场数据是指构建模式的初始状态。初始状态分为冷启动(Cold Start)和热启动(Warm Start)两种，其中，冷启动指的是设定一个物理上合理的土壤水、土壤温度和积雪状态等数值，热启动指的是由外部数据读入已经运行过一段时间后的模式状态。冷启动设定简单，不需要额外的数据，但通常主程序需运行比热启动更长的时间，才能达到较为平衡的状态。
 
-主程序对陆面主要的物理、化学、生物和人类活动等过程进行时间积分预报。主程序分离线运行和与大气模式耦合运行两种情况：离线运行时，需准备好大气驱动数据作为输入；耦合运行时，模式以一定的频率从大气模式在线获取驱动数据，同时向大气模式反馈陆表的状态和通量。此外，根据模式功能，可能还需要气溶胶、氮沉降和臭氧等数据作为输入，在运行时在线读入。
+主程序对陆面主要的物理、化学、生物和人类活动等过程进行时间积分预报。主程序分离线运行和与大气模式耦合运行两种情况：离线运行时，需准备好大气驱动数据作为输入；耦合运行时，模式以一定的频率从大气模式在线获取驱动数据，同时向大气模式反馈陆表的状态和通量。此外，根据模式功能，可能还需要气溶胶、氮沉降和臭氧等数据作为输入，在运行时读入。
 
-CoLM程序代码的子目录见表~\ref{subdirectories}。
+CoLM源代码的目录结构见表~\ref{subdirectories}。
 \begin{table}[!htbp]\small
-\caption{CoLM目录} \label{subdirectories}
+\caption{CoLM源代码目录} \label{subdirectories}
 \centering \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{cp{0.8\textwidth}}
 \toprule
@@ -183,16 +183,18 @@ LDFLAGS = -L$(NETCDF_LIB) -lnetcdff -lnetcdf -llapack -lblas
 
 \end{lstlisting}
 
-以上文件对编译器、NetCDF软件包的路径和编译选项等进行了配置。其中，编译器mpif90为系统默认的集成MPI环境的Fortran编译器，可在Linux系统中使用命令 \texttt{which mpif90} 查看其完整路径。文件中使用了NETCDF\_LIB和NETCDF\_INC两个变量对NetCDF软件包的路径进行了设置。LAPACK和BLAS是常用的软件包，这里并未对其路径进行设置，编译器会在系统默认的软件包路径中进行查找。通常来讲，用户只需确认编译器和NetCDF软件包的设置正确，即可对CoLM进行编译。
+以上文件对编译器、NetCDF软件包的路径和编译选项等进行了配置。其中，编译器\texttt{mpif90}为系统默认的集成MPI环境的Fortran编译器，可在Linux系统中使用命令 \texttt{which mpif90} 查看其完整路径。文件中使用了NETCDF\_LIB和NETCDF\_INC两个变量对NetCDF软件包的路径进行了设置。LAPACK和BLAS是常用的软件包，这里并未对其路径进行设置，编译器会在系统默认的软件包路径中进行查找。通常来讲，用户只需确认编译器和NetCDF软件包的设置正确，即可对CoLM进行编译。
 
+\bigskip
 \textbf{第2步}，准备数据。
 
 CoLM的运行需要两个必要数据：地表属性数据和大气驱动数据。
 
-模式单元上的地表属性数据可由高分辨率的原始数据升尺度得到，也可直接使用已经制作好的数据。若使用原始数据升尺度，需准备好完整的原始数据，这些数据大多为全球1公里及以下分辨率的数据，体量较大。对一些常用的网格单元，如0.5度的经纬度网格，CoLM预先制作好了地表属性数据，可直接下载使用。
+模式单元上的地表属性数据可由高分辨率的原始数据升尺度得到，也可直接使用预先制作好的数据。若使用原始数据升尺度，需准备好完整的原始数据，这些数据大多为全球1千米及以下分辨率的数据，体量较大。对一些常用的网格单元，如0.5度的经纬度网格，CoLM预先制作好了地表属性数据，可直接下载使用。
 
 当进行离线模拟时，还需准备大气驱动数据。CoLM支持十几种常见的离线驱动数据，这些数据可从其数据网站上下载，然后使用 \texttt{\$CoLMRoot/preprocess/Forcings} 目录下的对应预处理程序转换为CoLM可直接使用的数据。
 
+\bigskip
 \textbf{第3步}，运行模式。
 
 CoLM通过以下两个文件对一个模式实例进行设置，
@@ -279,10 +281,10 @@ CoLM通过以下两个文件对一个模式实例进行设置，
 
 以上文件设置：模拟区域为覆盖大湾区的矩形区域；起止时间为2010年1月1日至2010年1月31日，其中前10天为预热时间；模拟的时间步长为半小时；模拟分辨率为0.5度；历史数据的输出分辨率为0.5度，默认输出所有变量的日平均值，且将每月的数据放置于一个文件内；每月保存一次模式状态用于重启动；同时，对输入输出数据进行了设置。
 
-完成软件环境的配置、数据的准备和模式实例的配置后，通过执行以下命令进行CoLM的编译,
+完成软件环境的配置、数据的准备和模式实例的配置后，在\texttt{\$CoLMRoot}目录下通过执行以下命令进行CoLM的编译,
 \begin{quote}
 \begin{lstlisting}
-cd $CoLMRoot && make
+make
 \end{lstlisting}
 \end{quote}
 编译完成后，会在\texttt{\$CoLMRoot/run}目录下生成\texttt{mksrfdata.x}, \texttt{mkinidata.x}, \texttt{colm.x} 三个可执行文件，依次执行这三个文件进行地表数据的制作、初始场数据的制作和主程序的运行。例如，使用mpirun进行运行时，可依次执行
@@ -306,7 +308,7 @@ mpirun -np $np $CoLMRoot/run/colm.x $NamelistFile
 模式使用了条件编译来实现各种模块或功能的打开和关闭，用户可打开\texttt{include/\allowbreak define.h}文件进行修改，可使用的模块和功能选项见表~\ref{table_define}。
 {\small
 \begin{longtable}{ll}
-\caption{define.h中的模块/功能选项} \label{table_define} \\
+\caption{define.h中的模块和功能选项} \label{table_define} \\
 \toprule
 \textbf{模块/功能选项} & \textbf{说明} \\
 \midrule
@@ -354,7 +356,7 @@ BGC &  是否模拟生物地球化学过程 \\
 CROP &  是否模拟作物过程 \\
 \hline
 \colorbox{gray}{\textcolor{white}{\bf{开关}}} & \bf{土地利用土地覆盖变化模块} \\
-LULCC &  是否模拟土地利用和土地覆盖变化过程 \\
+LULCC &  是否进行土地利用和土地覆盖变化模拟 \\
 \hline
 \colorbox{gray}{\textcolor{white}{\bf{开关}}} & \bf{数据同化模块} \\
 DataAssimilation &  是否同化观测数据 \\
@@ -418,7 +420,7 @@ DEF\_simulation\_time\%timestep & 浮点型 & 模拟的时间步长，默认值�
 
 \subsection{数据目录}
 
-数据目录主要包括：1）高分辨率的地表基础数据目录，用于存放地表覆盖数据、土壤数据、植被数据、地形数据、水文学数据以及城市数据等，这些数据的分辨率均在1公里以下，在制作地表数据时升尺度到模式分辨率进行使用；2）模式初始化或运行时的输入数据目录，用于存放气溶胶数据、氮沉降数据、作物和火灾数据、臭氧数据等驱动数据及地下水位、土壤水热状态、积雪状态和碳氮状态等用于热启动初始化的数据，这些数据不具有高分辨率，在模式初始化或者运行时映射到模式计算单元进行使用；3）输出数据目录，存放升尺度得到的地表数据、初始化或重启动数据以及历史输出数据，每个实例根据名称使用单独的文件夹；4）数据同化目录，存放观测数据及同化后的结果数据。
+数据目录主要包括：1）高分辨率的地表基础数据目录，用于存放地表覆盖数据、土壤数据、植被数据、地形数据、水文学数据以及城市数据等，这些数据的分辨率均在1千米以下，在制作地表数据时升尺度到模式分辨率进行使用；2）模式初始化或运行时的输入数据目录，用于存放气溶胶数据、氮沉降数据、作物和火灾数据、臭氧数据等驱动数据及地下水位、土壤水热状态、积雪状态和碳氮状态等用于热启动初始化的数据，这些数据不具有高分辨率，在模式初始化或者运行时映射到模式计算单元进行使用；3）输出数据目录，存放升尺度得到的地表数据、初始化或重启动数据以及历史输出数据，每个实例根据名称使用单独的文件夹；4）数据同化目录，存放观测数据及同化后的结果数据。
 
 变量及说明见表~\ref{table_nl_dir_file}。
 
@@ -442,7 +444,7 @@ DEF\_DA\_obsdir & 字符串 & 进行数据同化时，观测数据存放的目�
 
 CoLM可以采用串行方式运行，方便对代码进行调试；也可以并行方式运行，以实现大规模、高分辨率的计算。
 
-模式以MPI并行方式执行时，将所有进程分为四类。第一类为主进程（Master），只有1个进程为主进程，它负责读入全局的信息（如namelist文件），和输出全局信息（如调试信息）；第二类为输入输出进程（IO），这些进程执行数据的读入和写出，每个数据块都被关联到唯一的一个IO进程，为了达到负载均衡，模式采用轮询的方式将数据块关联到IO进程上；第三类为工作进程（Worker），这些进程负责主要的模式计算；第四类进程为回写进程（Writeback），它不是必选项，只在回写功能打开时使用。详细的CoLM并行计算构架见第\ref{ch_parallel}章。
+模式以MPI并行方式执行时，将所有进程分为四类。第一类为主进程（Master），只有1个进程为主进程，它负责读入全局的信息（如namelist文件），和输出全局信息（如调试信息）；第二类为输入输出进程（IO），这些进程执行数据的读入和写出，每个数据块都被关联到唯一的一个IO进程，为了达到负载均衡，模式采用轮询的方式将数据块关联到IO进程上；第三类为工作进程（Worker），这些进程负责主要的模式计算；第四类进程为回写进程（Writeback），它不是必选项，只在回写功能打开时使用。详细的CoLM并行计算构架见第~\ref{ch_parallel} 章。
 
 为了减少IO进程与Worker进程间的数据交换量，模式将每个IO进程与多个Worker进程进行了绑定，IO进程负责的数据块上的计算任务会分发给与之绑定的Worker进程。一个IO进程和与之绑定的多个Worker进程组成一个进程组，进程组的大小可在模式运行时由DEF\_PIO\_groupsize进行设定。
 
@@ -471,7 +473,7 @@ CoLM可以在三种陆表单元结构下运行：1）经纬度网格结构；2�
 
 在namelist文件中，对定义模式空间单元结构使用的数据进行设置。在使用经纬度网格时，可选择从文件读入网格的定义数据（DEF\_file\_mesh）或者直接指定网格单元的分辨率（设置DEF\_GRIDBASED\_lon\_res和DEF\_GRIDBASED\_lat\_res）。在使用流域单元网格和非结构网格时，需要从文件读入数据。此外，使用可选的DEF\_file\_mesh\_\allowbreak filter文件可从由DEF\_domain定义的模拟区域中屏蔽掉部分子区域或者网格。
 
-次网格选用主要通过\texttt{define.h}进行设置，同时可以在namelist文件进行部分选项细化，包括DEF\_FAST\_PC和DEF\_SOLO\_PFT。当DEF\_FAST\_PC设置为 TRUE 时，每个网格中所有PFT看成一个植物群落进行模拟，此时会降低模型计算量，提高模拟速度(FAST)；为 FALSE 时，网格中每种地表覆盖类型中的PFT各自看成一个植物群落进行模拟。DEF\_SOLO\_PFT默认为 FALSE，当设置为 TRUE 时，单独 (SOLO) 模拟网格中每种地表覆盖所包含的 PFT 类型，此选项模拟相比而言更加精细化，但同时会增加计算量。PFT 次网格方案默认设置为FALSE，即把网格内所有同种 PFT 进行聚合后模拟 。
+次网格选用主要通过\texttt{define.h}进行设置，同时可以在namelist文件进行部分选项细化，包括DEF\_FAST\_PC和DEF\_SOLO\_PFT。当DEF\_FAST\_PC设置为 TRUE 时，每个网格中所有PFT看成一个植物群落进行模拟，此时会降低模型计算量，提高模拟速度；为 FALSE 时，网格中每种地表覆盖类型中的PFT各自看成一个植物群落进行模拟。DEF\_SOLO\_PFT默认为 FALSE，当设置为 TRUE 时，单独 (SOLO) 模拟网格中每种地表覆盖所包含的 PFT 类型，此选项模拟相比而言更加精细化，但同时会增加计算量。PFT 次网格方案默认设置为FALSE，即把网格内所有同种 PFT 进行聚合后模拟 。
 
 Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 
@@ -506,7 +508,7 @@ DEF\_SUBGRID\_SCHEME & 字符串 & 通过宏定义进行预设，用户无需设
 
 \subsection{制作地表数据}
 
-在模式运行前，需制作地表数据，即从高分辨率的数据聚合得到模式网格单元内的变量或者参数（升尺度）。对于制作的地表数据需要指定年份，可通过namelist变量 DEF\_LC\_YEAR进行设定，默认为2005年。叶面积指数数据可不受DEF\_LC\_YEAR的限定而使用逐年变化的数据（见第\ref{subsection_lai}节）。当模拟区域较大时，从源数据制作地表数据通常需要使用较大的存储和内存空间，也需较长时间。模式中提供了从制作好的更大区域的数据中提取模拟区域的数据的方法，namelist文件中的相关选项设置见表~\ref{table_nl_mksrfdata}。
+在模式运行前，需制作地表数据，即从高分辨率的数据聚合得到模式网格单元内的变量或者参数（升尺度）。对于制作的地表数据需要指定年份，可通过namelist变量 DEF\_LC\_YEAR进行设定，默认为2005年。叶面积指数数据可不受DEF\_LC\_YEAR的限定而使用逐年变化的数据（见第~\ref{subsection_lai} 节）。当模拟区域较大时，从源数据制作地表数据通常需要使用较大的存储和内存空间，也需较长时间。模式中提供了从制作好的更大区域的数据中提取模拟区域的数据的方法，namelist文件中的相关选项设置见表~\ref{table_nl_mksrfdata}。
 
 通过设置DEF\_LANDONLY为TRUE，可屏蔽掉模拟区域中的海洋区域。
 
@@ -531,7 +533,7 @@ DEF\_dir\_existing\_srfdata & 字符串 & 已有制作好的更大模拟区域�
 DEF\_LANDONLY & 逻辑型 & 值为TRUE时，屏蔽掉海洋区域。默认为TRUE \\
 DEF\_USE\_SOILPAR\_UPS\_FIT & 逻辑型 & 值为TRUE时，使用FIT算法聚合土壤参数数据。默认为TRUE \\
 DEF\_SOIL\_REFL\_SCHEME & 整型 & 数值为1时，根据土地覆盖类型，使用查找表给定土壤颜色的类型；数值为2时，从全球格点数据中读取土壤颜色数值。默认为2\\ 
-USE\_zip\_for\_aggregation & 逻辑型 & 在并行模式下制作地表数据时，若像素点网格（约为模式使用的最高分辨率的数据网格，如90米）比高分辨率的数据网格（如土壤属性数据的1公里网格）更小，可将此变量设置为TRUE，提高进程间数据传输的速度。默认为TRUE，一般不需更用户更改 \\
+USE\_zip\_for\_aggregation & 逻辑型 & 在并行模式下制作地表数据时，若像素点网格（约为模式使用的最高分辨率的数据网格，如90米）比高分辨率的数据网格（如土壤属性数据的1千米网格）更小，可将此变量设置为TRUE，提高进程间数据传输的速度。默认为TRUE，一般不需更用户更改 \\
 DEF\_Srfdata\_CompressLevel & 整型 & 保存制作好的地表数据到文件中时，使用的压缩的级别，取值0到9，0表示不压缩。默认为1\\
 \bottomrule
 \end{tabular} 
@@ -555,7 +557,7 @@ DEF\_Srfdata\_CompressLevel & 整型 & 保存制作好的地表数据到文件�
 \toprule
 \textbf{1.数据文件} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-SITE\_fsrfdata & 字符串 & 站点地表数据存放的文件 \\\midrule
+SITE\_fsrfdata & 字符串 & 站点观测地表属性数据存放的文件 \\\midrule
 \textbf{2.基本信息} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
 SITE\_lon\_location & 浮点型 & 站点经度 \\
@@ -574,7 +576,7 @@ USE\_SITE\_soilreflectance & 逻辑型 & 土壤反射数据来源。默认TRUE \
 USE\_SITE\_soilparameters & 逻辑型 & 土壤水力和热力参数数据来源。默认TRUE \\
 USE\_SITE\_dbedrock & 逻辑型 & 基岩深度数据来源。默认TRUE \\
 USE\_SITE\_topography & 逻辑型 & 高程数据来源。默认TRUE \\
-USE\_SITE\_urban\_paras & 逻辑型 & 城市参数数据来源。默认TRUE \\
+USE\_SITE\_urban\_paras & 逻辑型 & 城市相关数据来源。默认TRUE \\
 & &(包括建筑形态、植被及水体参数) \\
 USE\_SITE\_thermal\_paras & 逻辑型 & 城市热力参数数据来源。默认FALSE \\
 USE\_SITE\_urban\_LAI & 逻辑型 & 城市叶面积指数数据来源。默认FALSE \\
@@ -590,9 +592,11 @@ USE\_SITE\_HistWriteBack & 逻辑型 & 值为TRUE时，将输出内容暂存于�
 
 \subsection{叶面积指数} \label{subsection_lai}
 
-CoLM可使用固定年或者逐年变化的叶面积指数数据，在namelist文件中使用DEF\_LAI\_CHANGE\_YEARLY进行选择。可使用的数据开始和结束年份由DEF\allowbreak\_LAI\allowbreak\_START\allowbreak\_YEAR和DEF\_LAI\_END\_YEAR来决定，超过该年份范围的数据设定为最近年份的LAI数据。
+CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI)，在namelist文件中使用DEF\_LAI\_CHANGE\_YEARLY进行选择。可使用的数据开始和结束年份由DEF\allowbreak\_LAI\allowbreak\_START\allowbreak\_YEAR和DEF\_LAI\_END\_YEAR来决定，超过该年份范围的数据设定为最近年份的LAI数据。
 
-CoLM可使用月值或者每8天（卫星观测的周期）的叶面积指数数据，在namelist文件中使用DEF\_LAI\_MONTHLY进行选择。
+卫星遥感LAI数据时间分辨率有每月或者每8天，在namelist文件中使用DEF\allowbreak\_LAI\allowbreak\_MONTHLY进行选择。
+
+当打开生物地球化学模块，设置DEF\_USE\_LAIFEEDBACK为TRUE，则使用模型所预测的叶面积指数，否者使用上述卫星遥感叶面积指数数据。
 
 具体设置见表~\ref{table_nl_lai}。
 
@@ -629,7 +633,7 @@ DEF\_USE\_LAIFEEDBACK & 逻辑型 & 使用叶碳含量计算叶面积指数(TRUE
 
 初始化使用的数据网格可与模式网格不同，模式会对读入的数据进行重采样，映射到模式计算单元。
 
-相关设置见表\ref{table_nl_ini}。
+相关设置见表~\ref{table_nl_ini}。
 
 \begin{table}[!htbp] \small
 \caption{Namelist变量：状态变量初始化}
@@ -652,7 +656,7 @@ DEF\_file\_cn\_Init & 字符串 & 植被土壤碳氮库数据存放的文件 \\
 
 \subsection{参数化方案选项}
 
-模式中可配置的参数化方案选项见表\ref{table_nl_parameterization}。
+模式中可配置的参数化方案选项见表~\ref{table_nl_parameterization}。
 
 {\small
 \begin{longtable}[!htbp]{lcp{0.45\textwidth}}
@@ -681,14 +685,14 @@ DEF\_RSS\_SCHEME & 整型 & 土壤阻抗方案，数值分别代表：0: 不考�
 DEF\_USE\_EstimatedRiverDepth & 逻辑型 & 在侧向流模块中，（TRUE）使用上游集水区产流数据估算河道深度，或（FALSE）从数据文件中读入河道深度）。默认为TRUE \\
 \midrule
 
-\textbf{2. 能量循环过程} && \\
+\textbf{2. 土壤热力过程} && \\
 \multicolumn{3}{l}{DEF\_THERMAL\_CONDUCTIVITY\_SCHEME} \\
  （接上行）& 整型 & 土壤热导率方案，数值分别代表：1: Farouki (1981); 2: Johansen (1975); 3: Cote and Konrad (2005); 4: Balland and Arp (2005); 5: Lu et al. (2007); 6: Tarnawski and Leong (2012); 7: De Vries (1963); 8: Yan Hengnian, He Hailong et al. (2019)。默认为4 \\
 \multicolumn{3}{l}{DEF\_USE\_SUPERCOOL\_WATER} \\
  （接上行）& 逻辑型 & 值为TRUE时，使用Niu and Yang (2006)过冷土壤水方案。默认为TRUE\\
  \midrule
 
-\textbf{3. 积雪过程} && \\
+\textbf{3. 积雪相关过程} && \\
 DEF\_USE\_SNICAR & 逻辑型 & 值为TRUE时，使用SNICAR积雪反照率模型。默认为FALSE \\
 DEF\_file\_snowoptics & 字符串 & 积雪光学属性参数数据文件。仅在使用SNICAR时有效 \\
 DEF\_file\_snowaging  & 字符串 & 积雪雪龄(有效粒径)计算所需参数数据文件。仅在使用SNICAR时有效 \\
@@ -700,7 +704,7 @@ DEF\_SPLIT\_SOILSNOW & 逻辑型 & 数值为TRUE时，分开模拟最上层的�
 DEF\_VEG\_SNOW & 逻辑型 & 值为TRUE时，打开植被积雪模块。打开该模块时建议使用去掉积雪影响的LAI (snow-free LAI)，打开后将考虑植被叶片积雪过程(包括叶片积雪截留、掉落)、叶片储热、叶片截留相态变化等过程。默认为FALSE \\
 \midrule
 
-\textbf{4. 植被过程} && \\
+\textbf{4. 植被相关过程} && \\
 DEF\_USE\_PLANTHYDRAULICS & 逻辑型 & 值为TRUE时，使用植被水力模型。默认为TRUE \\
 DEF\_USE\_MEDLYNST & 逻辑型 & 值为TRUE时，使用MEDLYN气孔导度方案。默认为FALSE \\
 DEF\_USE\_WUEST & 逻辑型 & 值为TRUE时，使用WUE气孔导度方案。默认为TRUE \\ 
@@ -715,7 +719,7 @@ DEF\_USE\_PN & 逻辑型 & 值为TRUE时，开启间断氮添加加速预热方�
 DEF\_USE\_NITRIF & 逻辑型 & 值为TRUE时，开启硝化反硝化过程方案。默认为TRUE \\
 \midrule
 
-\textbf{6. 人类活动} && \\
+\textbf{6. 人类活动相关} && \\
 
 DEF\_LULCC\_SCHEME & 整型 & 使用土地利用土地覆盖变化模块时状态变量的转换方案选项：1代表同类型赋值方案(STA)；2代表质量和能量守恒转换方案(MEC)。默认为1 \\
 DEF\_SSP & 字符串 &  CMIP6未来二氧化碳浓度数据，其值代表不同的情景：`126'，`245'，`370',`585'，默认值为`585' \\
@@ -728,7 +732,7 @@ DEF\_USE\_FIRE & 逻辑型 & 值为TRUE时，开启火灾模型。默认为FALSE
 
 \subsection{城市模块}
 
-当通过宏定义(\texttt {define.h})打开城市模式时，可以对其进行功能选项细分，包括所选用的城市次网格类型，模拟功能选项以及是否只模拟城市区域。次网格类型可以通过DEF\_URBAN\_type\_scheme设置，目前提供传统的NCAR 3种城市分类（高建筑-TB、高密度-HD及中密度-MD）和LCZ 10种城市分类两种方案。功能选项包括是否模拟城市中的植被、水体、建筑能耗、交通热及人体代谢热。默认情况下，CoLM城市模式读入表征3D建筑结构的单栋建筑物高度比边长数据（H/L），当该参数不存在并由传统的二维街谷高宽比（H/W）进行转换时，设置为TRUE。如果只关注城市区域的模拟结果，可以通过定义DEF\_URBAN\_ONLY为TRUE，此时只模拟计算网格中城市地表覆盖区域。
+当通过宏定义(\texttt {define.h})打开城市模式时，可以对其进行功能选项细分，包括所选用的城市次网格类型，模拟功能选项以及是否只模拟城市区域。次网格类型可以通过DEF\_URBAN\_type\_scheme设置，目前提供传统的NCAR 3种城市分类（高建筑-TB、高密度-HD及中密度-MD）和LCZ 10种城市分类两种方案。功能选项包括是否模拟城市中的植被、水体、建筑能耗、交通热及人体代谢热。默认情况下，CoLM城市模式读入表征3D建筑结构的平均单栋建筑物高度-边长比数据（H/L），当该参数不存在并由传统的二维街谷高宽比（H/W）进行转换时，设置DEF\_USE\_CANYON\_HWR为TRUE。如果只关注城市区域的模拟结果，可以通过定义DEF\_URBAN\_ONLY为TRUE，此时只模拟计算网格中城市地表覆盖区域。
 
 具体设置见表~\ref{table_nl_urban}。
 \begin{table}[!htb] \small
@@ -745,7 +749,7 @@ DEF\_URBAN\_BEM & 逻辑型 & 是否打开城市建筑能耗模型。默认为TR
 DEF\_URBAN\_TREE & 逻辑型 & 是否模拟城市中植被。默认为TRUE\\
 DEF\_URBAN\_WATER & 逻辑型 & 是否模拟城市中水体。默认为TRUE\\
 DEF\_URBAN\_LUCY & 逻辑型 & 是否打开LUCY模型模拟交通热、人体代谢热。默认为TRUE\\
-DEF\_USE\_CANYON\_HWR & 逻辑型 & FALSE表示使用三维建筑高边长比参数（H/L），TRUE表示使用传统街谷高宽比(H/W)参数。默认为TRUE \\
+DEF\_USE\_CANYON\_HWR & 逻辑型 & FALSE表示使用三维建筑高边长比参数（H/L），TRUE表示读入传统街谷高宽比(H/W)参数并转换为H/L。默认为TRUE \\
 \bottomrule
 \end{tabular} 
 \end{table}
@@ -753,7 +757,7 @@ DEF\_USE\_CANYON\_HWR & 逻辑型 & FALSE表示使用三维建筑高边长比参
 
 \section{输入数据：高分辨率地表数据} \label{landdata}
 
-高分辨率地表数据见表\ref{table_hires_rawdata}。
+高分辨率地表数据见表~\ref{table_hires_rawdata}。
 
 {\small
 \begin{longtable}{llp{0.75\textwidth}}
@@ -1048,7 +1052,7 @@ DEF\_USE\_CANYON\_HWR & 逻辑型 & FALSE表示使用三维建筑高边长比参
 
 模式可使用目前流行的大部分离线大气驱动数据。\par
 为了方便用户使用，在\$CoLMRoot/preprocess/Forcings目录下放置了下载及预处理这些驱动数据的代码。\par
-在模式中使用时，需给出驱动数据的接口信息，对每种大气驱动数据这些信息放置于单独的namelist文件中（位于目录\$CoLMRoot/run/forcing内），一般只需更改其中的数据路径即可使用。大气驱动相关的namelist设置见表\ref{table_nl_forcing}。
+在模式中使用时，需给出驱动数据的接口信息，对每种大气驱动数据这些信息放置于单独的namelist文件中（位于目录\$CoLMRoot/run/forcing内），一般只需更改其中的数据路径即可使用。大气驱动相关的namelist设置见表~\ref{table_nl_forcing}。
 
 {\small
 \begin{longtable}[!htbp]{lcp{0.4\textwidth}}
@@ -1076,7 +1080,7 @@ DEF\_dir\_forcing & 字符串 & 驱动数据的存放目录 \\
 DEF\_Forcing & 自定义类型 & 定义驱动数据 \\
 DEF\_Forcing\%dataset & 字符串 & 数据的名称 \\
 DEF\_Forcing\%solarin\_all\_band & 逻辑型 & 下行短波辐射是否为全波段的 \\
-DEF\_Forcing\%HEIGHT\_mode & 字符串 & 关于大气强迫参考高度定义，`$absolute$'表示相对地表的绝对高度，`$relative$'表示相对树高/建筑屋顶的相对高度值 \\
+DEF\_Forcing\%HEIGHT\_mode & 字符串 & 关于大气强迫参考高度定义，`$absolute$'表示相对地面的绝对高度，`$relative$'表示相对树高/建筑屋顶的相对高度值 \\
 DEF\_Forcing\%HEIGHT\_V & 浮点型 & 近地面风速场观测高度 \\
 DEF\_Forcing\%HEIGHT\_T & 浮点型 & 近地面温度场观测高度 \\
 DEF\_Forcing\%HEIGHT\_Q & 浮点型 & 近地面比湿场观测高度 \\
@@ -1117,7 +1121,7 @@ DEF\_USE\_Forcing\_Downscaling & 逻辑型 & 值为TRUE时，对大气驱动进�
 （接上行）& 字符串 & 长波辐射的降尺度调整方案：数值分别代表: `I': Fiddes and Gruber (2014); `II': 假设长波辐射与海拔是线性变化关系。默认为`II' \\
 \end{longtable}}
 
-表\ref{table_forcings_info}给出了经过测试的可稳定应用于CoLM的大气驱动数据的基本信息。其预处理程序及namelist文件均可在程序代码中找到。
+表~\ref{table_forcings_info}给出了经过测试的可稳定应用于CoLM的大气驱动数据的基本信息。其预处理程序及namelist文件均可在程序代码中找到。
 
 \begin{table}[!htbp]\small
 \caption{可使用的大气驱动数据} \label{table_forcings_info}
@@ -1151,7 +1155,7 @@ TPMFD & 0.0333°/3-hourly & 1979-2021 & \makecell{青藏高原
 \end{table}
 
 \section{输出数据：重启动文件}\label{restart}
-对于重启动文件，用户只需设置保存的频率和数据文件的压缩级别，见表\ref{table_nl_restart}。
+对于重启动文件，用户只需设置保存的频率和数据文件的压缩级别，见表~\ref{table_nl_restart}。
 \begin{table}[!htbp] \small
 \caption{输出数据：重启动文件}\label{table_nl_restart}
 \centering \renewcommand{\arraystretch}{1.2}
@@ -1168,7 +1172,7 @@ DEF\_REST\_COMPRESS\_LEVEL & 整型 & 重启动文件的压缩级别，可选从
 
 \subsection{namelist文件中的设置}
 
-对于全球或区域模拟，模式均可以经纬度网格的形式输出模拟结果。对流域单元网格和非结构网格，还可将定义在不规则单元上的值以向量的形式输出。以经纬度网格输出模拟结果时，网格的分辨率可以任意设置，不需与模拟单元的分辨率或者大气驱动的分辨率一致，模式会自动将模拟结果映射到输出网格上。与输出模拟结果相关的namelist配置见表\ref{table_nl_history}。
+对于全球或区域模拟，模式均可以经纬度网格的形式输出模拟结果。对流域单元网格和非结构网格，还可将定义在不规则单元上的值以向量的形式输出。以经纬度网格输出模拟结果时，网格的分辨率可以任意设置，不需与模拟单元的分辨率或者大气驱动的分辨率一致，模式会自动将模拟结果映射到输出网格上。与输出模拟结果相关的namelist配置见表~\ref{table_nl_history}。
 
 {\small
 \begin{longtable}[htbp]{lcp{0.42\textwidth}}
@@ -1196,7 +1200,7 @@ DEF\_HIST\_groupby & 字符串 & 历史数据在文件中的组织形式，可�
 DEF\_HIST\_mode & 字符串 & 数据文件的组织形式，值为~`one'时，模式将模拟区域的数据拼接完整后输出，值为~`block'时，模式将每块数据输出到单独的文件中。默认为`one'\\
 DEF\_HIST\_COMPRESS\_LEVEL & 整型 & 变量历史文件的压缩级别，可选从0到9的整数，0表示不压缩，数字越大代表压缩比越高；对于高压缩比，压缩或者解压所需的时间也会更长。默认为1 \\
 DEF\_HIST\_WriteBack & 逻辑型 & 值为TRUE时，使用单独的回写文件进程进行历史数据的输出，IO进程采用非阻塞的方式向回写进程发送数据，可减少由较慢的写文件速度造成的等待。默认为FALSE \\
-DEF\_HIST\_vars & 自定义类型 & 其元素为定义是否输出变量的开关，元素名为输出变量的名字，元素的数据类型为逻辑性，真值代表输出，假值代表不输出；变量列表见第\ref{sec_hist_vars_basic}-\ref{sec_hist_vars_crop}节 \\
+DEF\_HIST\_vars & 自定义类型 & 其元素为定义是否输出变量的开关，元素名为输出变量的名字，元素的数据类型为逻辑性，真值代表输出，假值代表不输出；变量列表见第~\ref{sec_hist_vars_basic}--\ref{sec_hist_vars_crop}节 \\
 DEF\_HIST\_vars\_out\_default & 逻辑型 & 所有变量开关的默认值，值为TRUE时全部输出，值为FALSE时全部不输出；默认值会被文件DEF\_HIST\_vars\_namelist中的变量开关的值修改。默认为TRUE \\
 DEF\_HIST\_vars\_namelist & 字符串 & 变量开关的namelist文件；输出变量开关的列表较长时，可将其放置在此独立的文件中，namelist的名称为nl\_colm\_history，文件中的开关值会覆盖由DEF\_HIST\_vars\_out\_default定义的默认值 \\
 \end{longtable}}
@@ -1204,7 +1208,7 @@ DEF\_HIST\_vars\_namelist & 字符串 & 变量开关的namelist文件；输出�
 
 \subsection{基本输出变量} \label{sec_hist_vars_basic}
 
-表\ref{table_nl_histvars_basic}给出了模式可输出的基本变量的简要信息。\par
+表~\ref{table_nl_histvars_basic} 给出了模式可输出的基本变量的简要信息。\par
 表中变量为自定义类型DEF\_hist\_vars的元素，使用时均需加自定义类型数据变量名。
 
 {\small
@@ -1369,7 +1373,7 @@ riv\_veloct  & 河道水流速度 & {[}basin, time{]} & \unit{m.s^{-1}} \\
 
 \subsection{城市模块输出变量}
 
-表\ref{table_nl_histvars_urban}给出了模式可输出的城市模块变量的简要信息。\par
+表~\ref{table_nl_histvars_urban} 给出了模式可输出的城市模块变量的简要信息。\par
 表中变量为自定义类型DEF\_hist\_vars的元素，使用时均需加自定义类型数据变量名。
 
 {\small
@@ -1407,16 +1411,16 @@ fhah & 空调加热通量 & {[}lon, lat, time{]} & \unit{W.m^{-2}} \\
 fwst & 空调排放废热 & {[}lon, lat, time{]} & \unit{W.m^{-2}} \\
 vehc & 交通热通量 & {[}lon, lat, time{]} & \unit{W.m^{-2}} \\
 meta & 代谢热通量 & {[}lon, lat, time{]} & \unit{W.m^{-2}} \\
-t\_room & 室内温度 & {[}lon, lat, time{]} & K \\
-t\_roof & 屋顶温度 & {[}lon, lat, time{]} & K \\
-t\_wall & 墙体温度 & {[}lon, lat, time{]} & K \\
-tafu & 室外温度 & {[}lon, lat, time{]} & K \\
+t\_room & 室内空气温度 & {[}lon, lat, time{]} & K \\
+t\_roof & 屋顶最外层温度 & {[}lon, lat, time{]} & K \\
+t\_wall & 墙体最外层温度 & {[}lon, lat, time{]} & K \\
+tafu & 室外空气温度 & {[}lon, lat, time{]} & K \\
 \end{longtable}}
 
 
 \subsection{生物地球化学循环模块输出变量}
 
-表\ref{table_nl_histvars_bgc}给出了模式可输出的生物地球化学循环模块变量的简要信息。\par
+表~\ref{table_nl_histvars_bgc} 给出了模式可输出的生物地球化学循环模块变量的简要信息。\par
 表中变量为自定义类型DEF\_hist\_vars的元素，使用时均需加自定义类型数据变量名。
 
 {\small
@@ -1538,7 +1542,7 @@ leafc\_c4grass & C4草地叶碳含量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} 
 
 \subsection{作物模式输出变量}\label{sec_hist_vars_crop}
 
-表\ref{table_nl_histvars_crop}给出了模式可输出的作物模块变量的简要信息。\par
+表~\ref{table_nl_histvars_crop} 给出了模式可输出的作物模块变量的简要信息。\par
 表中变量为自定义类型DEF\_hist\_vars的元素，使用时均需加自定义类型数据变量名。
 
 {\small
@@ -1647,7 +1651,7 @@ prodc\_unmanagedcrop & 无管理农田瞬时产量 & {[}lon, lat, time{]} & \uni
 \section{径流模型CaMa-Flood}
 关于CaMa-Flood运行时所用到的设定可在run目录下的CaMa-Flood.nml中进行修改。以下对此进行详细介绍。
 \subsection{运行时参数}
-模式运行参数是模型的核心设置,它们决定了模型在执行过程中的基本行为和能力。主要的设定详见表~\ref{模式运行参数设定}
+模式运行参数是模型的核心设置,它们决定了模型在执行过程中的基本行为和能力。主要的设定详见表~\ref{模式运行参数设定}。
 
 \begin{table}[htbp]
 \caption{CaMa-Flood~模式运行参数设定}
@@ -2099,7 +2103,7 @@ Namelist文件的内容为，
 
 \section{实例5：区域高分辨率模拟}
 
-本实例配置了一个区域高分辨率模拟情景。实例使用了1公里的经纬度网格，地表覆盖类型（IGBP）植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并使用MPI进行并行加速。
+本实例配置了一个区域高分辨率模拟情景。实例使用了1千米的经纬度网格，地表覆盖类型（IGBP）植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并使用MPI进行并行加速。
 
 define.h文件的内容为，
 \lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/hires/define.h}
@@ -2118,7 +2122,7 @@ Namelist文件的内容为，
 8）每月保存一次\textbf{重启动}变量（DEF\_WRST\_FREQ）；\par
 9）\textbf{历史数据的输出},
 \begin{itemize}[nosep,leftmargin=4em]
-    \item 输出到1公里经纬度网格（DEF\_hist\_lon\_res和DEF\_hist\_lon\_res）；
+    \item 输出到1千米经纬度网格（DEF\_hist\_lon\_res和DEF\_hist\_lon\_res）；
     \item 输出变量的日值（DEF\_HIST\_FREQ）；
     \item 每月的数据保存在一个文件中（DEF\_HIST\_groupby）；
     \item 输出所有变量（DEF\_hist\_vars\_out\_default）.
