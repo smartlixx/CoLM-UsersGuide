@@ -240,7 +240,7 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 
 \subsection{单点模拟}
 
-对单点进行模拟时，可以用站点的地表数据替代由全球格点数据中提取的数据。站点地表数据存放于文件\texttt{SITE\_fsrfdata}中，在\texttt{namelist}文件中，使用变量\texttt{USE\_SITE\_\allowbreak\$data}来指定数据来源，详见表~\ref{table_nl_singlepoint}。
+对单点进行模拟时，可以用站点的地表数据替代由全球格点数据中提取的数据。站点地表数据存放于文件\texttt{SITE\_fsitedata}中，在\texttt{namelist}文件中，使用变量\texttt{USE\_SITE\_\allowbreak\$data}来指定数据来源，详见表~\ref{table_nl_singlepoint}。
 
 使用站点的气象观测资料驱动模式时，可将驱动数据一次读入内存来提高运行速度，在\texttt{namelist}文件中，使用变量\texttt{USE\_SITE\_ForcingReadAhead}来打开这一功能。
 
@@ -254,7 +254,7 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 \toprule
 \textbf{1.数据文件} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-\texttt{SITE\_fsrfdata} & 字符串 & 站点观测地表属性数据存放的文件 \\\midrule
+\texttt{SITE\_fsitedata} & 字符串 & 站点观测地表属性数据存放的文件 \\\midrule
 \textbf{2.基本信息} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
 \texttt{SITE\_lon\_location} & 浮点型 & 站点经度 \\
