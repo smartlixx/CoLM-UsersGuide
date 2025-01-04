@@ -11,7 +11,7 @@ jobs:
           - name: Compile XeLaTeX document
             uses: xu-cheng/latex-action@v3
             with:
-              root_file: CoLM202X_UsersGuide.tex
+              root_file: CoLM2024_UsersGuide.tex
               working_directory: ./
               latexmk_use_xelatex: true
           - name: Upload PDF file
