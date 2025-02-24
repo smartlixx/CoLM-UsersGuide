@@ -11,7 +11,7 @@ Namelist文件的内容为，
 \lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/global/Global_Grid_50km_PC_VG.nml}
 
 此实例中，\par
-1）\textbf{并行化}方面，将全球分为20\textdegree$\times$20\textdegree 的数据块进行并行模拟（\texttt{DEF\_nx\_blocks}和\texttt{DEF\_ny\_blocks}），每24个进程为一个工作组（\texttt{DEF\_PIO\_groupsize}）；\par
+1）\textbf{并行化}方面，将全球分为20\textdegree$\times$20\textdegree 的数据块进行并行模拟（\texttt{DEF\_nx\_blocks=18}和\texttt{DEF\_ny\_blocks=9}），每24个进程为一个工作组（\texttt{DEF\_PIO\_groupsize}）；\par
 2）\textbf{地表覆盖类型数据}使用了2005年的数据（\texttt{DEF\_LC\_YEAR}）；\par
 3）\textbf{叶面积指数数据}使用了2005年的月数据（不随年份变化时，叶面积指数数据的年份同\texttt{DEF\_LC\_YEAR}），不随年份变化（\texttt{DEF\_LAI\_CHANGE\_YEARLY}）；\par
 4）使用FIT算法进行\textbf{土壤水热参数升尺度}（\texttt{DEF\_USE\_SOILPAR\_UPS\_FIT}）；\par
@@ -122,7 +122,7 @@ Namelist文件的内容为，
 \lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/bgc/Global_Grid_2x2_PFT_VG_BGC.nml}
 
 此实例中，\par
-1）\textbf{并行化}方面，将全球分为20\textdegree$\times$20\textdegree 的数据块进行并行模拟（\texttt{DEF\_nx\_blocks}和\texttt{DEF\_ny\_blocks}），每24个进程为一个工作组（\texttt{DEF\_PIO\_groupsize}）；\par
+1）\textbf{并行化}方面，将全球分为20\textdegree$\times$20\textdegree 的数据块进行并行模拟（\texttt{DEF\_nx\_blocks=18}和\texttt{DEF\_ny\_blocks=9}），每24个进程为一个工作组（\texttt{DEF\_PIO\_groupsize}）；\par
 2）\textbf{地表覆盖类型数据}使用了2005年的数据（\texttt{DEF\_LC\_YEAR}）；\par
 3）\textbf{叶面积指数数据}使用了2005年的月数据（不随年份变化时，叶面积指数数据的年份同\texttt{DEF\_LC\_YEAR}），不随年份变化（\texttt{DEF\_LAI\_CHANGE\_YEARLY}）；\par
 4）使用FIT算法进行\textbf{土壤水热参数升尺度}（\texttt{DEF\_USE\_SOILPAR\_UPS\_FIT}）；\par
