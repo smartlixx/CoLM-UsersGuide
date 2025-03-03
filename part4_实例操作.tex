@@ -182,16 +182,23 @@ Namelist文件的内容为，
 \end{itemize}\par
 10）其他配置使用模式默认值。
 
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.90\textwidth]{figures/Example05_BilinearDownscaling.pdf}
+    \includegraphics[width=0.90\textwidth]{figures/Example05_BilinearOnly.pdf}
+    \caption{高分辨率模拟算例中，（a）使用降尺度方法和（b）不使用降尺度方法对驱动数据中的气温进行重采样的结果。图中实线为驱动数据网格（0.25度经纬度网格）}
+    \label{fig:fig_hiresdownscaling}
+\end{figure}
 
 \section{实例6：流域单元和侧向流模拟}
 
-本节配置了一个基于流域网格单元并包含侧向流模拟的实例。实例使用了流域单元网格并打开了侧向流模块，使用基于地表覆盖类型（IGBP）的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并基于MPI进行并行加速。流域单元的划分结果见图~\ref{fig:fig_huaihe}。
+本节配置了一个基于流域网格单元并包含侧向流模拟的实例。实例使用了流域单元网格并打开了侧向流模块，使用基于地表覆盖类型（IGBP）的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并基于MPI进行并行加速。流域单元的划分结果见图~\ref{fig:fig_pearlriver}。
 
 \begin{figure}[htpb]
     \centering
-    \includegraphics[width=\textwidth]{figures/CatchmentMesh_Huaihe.pdf}
-    \caption{基于流域单元网格对淮河流域进行模拟时的流域单元划分图。本实例中，流域单元的面积阈值为250~$\mathrm{km^2}$。图中蓝色部分表示湖泊和河道，其余颜色代表流域单元。}
-    \label{fig:fig_huaihe}
+    \includegraphics[width=\textwidth]{figures/Example06_PearlRiverMesh.pdf}
+    \caption{基于流域单元网格对珠江流域进行模拟时的流域单元划分图。本实例中，流域单元的面积阈值为250~$\mathrm{km^2}$。}
+    \label{fig:fig_pearlriver}
 \end{figure}
 
 \texttt{define.h}文件的内容为，
