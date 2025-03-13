@@ -1,0 +1,81 @@
+&nl_colm
+
+! An example for catchment-based simulation with lateral flow.
+
+! --------------------------------------------------------------------
+! (1) Casename, domain, time period and step, directories, mesh 
+
+   DEF_CASE_NAME = 'PearlRiver_Catch_250km2_PC_VG'
+   
+   DEF_domain%edges = 21.5
+   DEF_domain%edgen = 27.0
+   DEF_domain%edgew = 102.0
+   DEF_domain%edgee = 115.0
+   
+   DEF_simulation_time%greenwich     = .TRUE.
+   DEF_simulation_time%start_year    = 2003
+   DEF_simulation_time%start_month   = 1
+   DEF_simulation_time%start_day     = 1
+   DEF_simulation_time%start_sec     = 0
+   DEF_simulation_time%end_year      = 2005
+   DEF_simulation_time%end_month     = 12
+   DEF_simulation_time%end_day       = 31
+   DEF_simulation_time%end_sec       = 86400
+   DEF_simulation_time%spinup_year   = 2004
+   DEF_simulation_time%spinup_month  = 1
+   DEF_simulation_time%spinup_day    = 1
+   DEF_simulation_time%spinup_sec    = 0
+   DEF_simulation_time%spinup_repeat = 1
+   
+   DEF_simulation_time%timestep      = 1800.
+   
+   DEF_dir_rawdata  = '/path/to/CoLMrawdata/'
+   DEF_dir_runtime  = '/path/to/CoLMruntime/'
+   DEF_dir_output   = '/path/to/cases/'
+   
+   DEF_CatchmentMesh_data    = '/path/to/PearlRiver_250km2.nc'
+   DEF_ElementNeighbour_file = '/path/to/PearlRiver_250km2.nc'
+
+   DEF_FAST_PC = .true.
+
+! --------------------------------------------------------------------
+! (2) Parallelization
+
+   DEF_nx_blocks = 72       ! in longitude globally
+   DEF_ny_blocks = 36       ! in latitude  globally
+   DEF_PIO_groupsize = 24   ! each group has 1 IO and 23 workers
+
+! --------------------------------------------------------------------
+! (3) Makeing surface data
+
+   DEF_LC_YEAR = 2005       ! using land cover type data in 2005
+   
+   DEF_LANDONLY            = .true.  ! only land surface is simulated
+   DEF_USE_SOILPAR_UPS_FIT = .true.  ! FIT algorithm in upscaling
+   DEF_LAI_MONTHLY         = .true.  ! monthly averaged LAI is used
+   DEF_LAI_CHANGE_YEARLY   = .false. ! LAI do not change by year
+
+! --------------------------------------------------------------------
+! (4) Parameteration schemes 
+
+   DEF_USE_Dynamic_Lake = .true.  ! using dynamic lake depth
+
+! --------------------------------------------------------------------
+! (5) Offline forcing
+
+   DEF_forcing_namelist = '/path/to/forcing/ERA5.nml'
+
+! --------------------------------------------------------------------
+! (6) Restart and History
+
+   DEF_WRST_FREQ = 'MONTHLY'    ! write restart file every month
+   
+   DEF_hist_lon_res = 0.05      ! longitude resolution for history
+   DEF_hist_lat_res = 0.05      ! latitude  resolution for history
+   
+   DEF_HIST_FREQ    = 'DAILY'   ! write history file every day
+   DEF_HIST_groupby = 'MONTH'   ! put one month's data in one file
+   
+   DEF_hist_vars_out_default = .true. ! output all variables
+
+/

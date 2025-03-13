@@ -246,22 +246,82 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 
 对变量历史进行输出时，也可将输出内容保存于内存中，待一个文件的内容存满后一次性输出，在\texttt{namelist}文件中，使用变量\texttt{USE\_SITE\_HistWriteBack}来打开这一功能。
 
-\begin{table}[!htbp] \small
-\caption{Namelist变量：单点模拟}
-\label{table_nl_singlepoint}
-\centering \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{lcp{0.45\textwidth}}
+% \begin{table}[!htbp] \small
+% \caption{Namelist变量：单点模拟}
+% \label{table_nl_singlepoint}
+% \centering \renewcommand{\arraystretch}{1.5}
+% \begin{tabular}{lcp{0.45\textwidth}}
+% \toprule
+% \textbf{1.数据文件} & & \\
+% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
+% \texttt{SITE\_fsitedata} & 字符串 & 站点观测地表属性数据存放的文件 \\\midrule
+% \textbf{2.基本信息} & & \\
+% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
+% \texttt{SITE\_lon\_location} & 浮点型 & 站点经度 \\
+% \texttt{SITE\_lat\_location} & 浮点型 & 站点纬度 \\
+% \texttt{SITE\_landtype} & 整型 & 站点地表覆盖类型 \\
+% \midrule
+% \multicolumn{3}{l}{\textbf{3. 数据来源}（\textbf{\texttt{TRUE}}代表站点观测数据，\textbf{\texttt{FALSE}}代表全球格点数据）} \\
+% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
+% \texttt{USE\_SITE\_landtype} & 逻辑型 & 地表覆盖类型数据来源。默认\texttt{FALSE} \\
+% \texttt{USE\_SITE\_pctpfts} & 逻辑型 & 植被百分比数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_pctcrop} & 逻辑型 & 作物百分比数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_htop} & 逻辑型 & 树高数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_LAI} & 逻辑型 & 叶面积指数数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_lakedepth} & 逻辑型 & 湖泊深度数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_soilreflectance} & 逻辑型 & 土壤反射数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_soilparameters} & 逻辑型 & 土壤水力和热力参数数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_dbedrock} & 逻辑型 & 基岩深度数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_topography} & 逻辑型 & 高程数据来源。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_urban\_geometry} & 逻辑型 & 城市建筑形态数据来源。默认\texttt{TRUE} \\
+% & &（建筑高度、建筑比例、三维建筑高边长比或街谷高宽比） \\
+% \texttt{USE\_SITE\_urban\_ecology} & 逻辑型 & 城市生态数据来源。默认\texttt{TURE} \\
+% & &（树覆盖度、树高、树LAI/SAI、水体覆盖度）\\
+% \texttt{USE\_SITE\_urban\_radiation} & 逻辑型 & 城市辐射属性数据来源。默认\texttt{TRUE} \\
+% & &（屋顶、墙面、透水面以及不透水面的反照率以及发射率） \\
+% \texttt{USE\_SITE\_urban\_thermal} & 逻辑型 & 城市热力属性数据来源。默认\texttt{FALSE} \\
+% & &（屋顶、墙面、不透水面的热容量以及热导率） \\
+% \texttt{USE\_SITE\_urban\_human} & 逻辑型 & 城市人类活动数据来源。默认\texttt{TRUE} \\
+% & &（人口密度）\\
+% \midrule
+% \textbf{4.运行时的优化} & & \\
+% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
+% \texttt{USE\_SITE\_ForcingReadAhead} & 逻辑型 & 值为\texttt{TRUE}时，预先将所有大气驱动数据读入内存；值为\texttt{FALSE}时，实时读取。默认\texttt{TRUE} \\
+% \texttt{USE\_SITE\_HistWriteBack} & 逻辑型 & 值为\texttt{TRUE}时，将输出内容暂存于内存中，待一个文件存满后一次性输出；值为\texttt{FALSE}时，实时输出。默认\texttt{TRUE} \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+\begin{longtable}{lcp{0.45\textwidth}}
+\caption{Namelist 变量：单点模拟} \label{table_nl_singlepoint} \\
 \toprule
-\textbf{1.数据文件} & & \\
+\textbf{1. 数据文件} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-\texttt{SITE\_fsitedata} & 字符串 & 站点观测地表属性数据存放的文件 \\\midrule
-\textbf{2.基本信息} & & \\
+% \midrule
+\endfirsthead
+
+\caption[]{Namelist 变量：单点模拟（续）} \\
+\toprule
+\textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
+% \midrule
+\endhead
+
+\midrule
+\multicolumn{3}{r}{续下页} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\texttt{SITE\_fsitedata} & 字符串 & 站点观测地表属性数据存放的文件 \\
+\midrule
+\textbf{2. 基本信息} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
 \texttt{SITE\_lon\_location} & 浮点型 & 站点经度 \\
 \texttt{SITE\_lat\_location} & 浮点型 & 站点纬度 \\
 \texttt{SITE\_landtype} & 整型 & 站点地表覆盖类型 \\
 \midrule
-\multicolumn{3}{l}{\textbf{3. 数据来源}（\textbf{\texttt{TRUE}}代表站点观测数据，\textbf{\texttt{FALSE}}代表全球格点数据）} \\
+\multicolumn{3}{l}{\textbf{3. 数据来源}（\textbf{\texttt{TRUE}} 代表站点观测数据，\textbf{\texttt{FALSE}} 代表全球格点数据）} \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
 \texttt{USE\_SITE\_landtype} & 逻辑型 & 地表覆盖类型数据来源。默认\texttt{FALSE} \\
 \texttt{USE\_SITE\_pctpfts} & 逻辑型 & 植被百分比数据来源。默认\texttt{TRUE} \\
@@ -273,19 +333,24 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 \texttt{USE\_SITE\_soilparameters} & 逻辑型 & 土壤水力和热力参数数据来源。默认\texttt{TRUE} \\
 \texttt{USE\_SITE\_dbedrock} & 逻辑型 & 基岩深度数据来源。默认\texttt{TRUE} \\
 \texttt{USE\_SITE\_topography} & 逻辑型 & 高程数据来源。默认\texttt{TRUE} \\
-\texttt{USE\_SITE\_urban\_paras} & 逻辑型 & 城市相关数据来源。默认\texttt{TRUE} \\
-& &(包括建筑形态、植被及水体参数) \\
-\texttt{USE\_SITE\_thermal\_paras} & 逻辑型 & 城市热力参数数据来源。默认\texttt{FALSE} \\
-\texttt{USE\_SITE\_urban\_LAI} & 逻辑型 & 城市叶面积指数数据来源。默认\texttt{FALSE} \\
+\texttt{USE\_SITE\_urban\_geometry} & 逻辑型 & 城市建筑形态数据来源。默认\texttt{TRUE} \\
+& &（建筑高度、建筑比例、三维建筑高边长比（或者街谷高宽比）） \\
+\newpage
+\texttt{USE\_SITE\_urban\_ecology} & 逻辑型 & 城市生态数据来源。默认\texttt{TRUE} \\
+& &（树覆盖度、树高、树 LAI/SAI、水体覆盖度）\\
+\texttt{USE\_SITE\_urban\_radiation} & 逻辑型 & 城市辐射属性数据来源。默认\texttt{TRUE} \\
+& &（屋顶、墙面、透水面以及不透水面的反照率以及发射率） \\
+\texttt{USE\_SITE\_urban\_thermal} & 逻辑型 & 城市热力属性数据来源。默认\texttt{FALSE} \\
+& &（屋顶、墙面、不透水面的热容量以及热导率） \\
+\texttt{USE\_SITE\_urban\_human} & 逻辑型 & 城市人类活动数据来源。默认\texttt{TRUE} \\
+& &（人口密度）\\
 \midrule
-\textbf{4.运行时的优化} & & \\
+\textbf{4. 运行时的优化} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-\texttt{USE\_SITE\_ForcingReadAhead} & 逻辑型 & 值为\texttt{TRUE}时，预先将所有大气驱动数据读入内存；值为\texttt{FALSE}时，实时读取。默认\texttt{TRUE} \\
-\texttt{USE\_SITE\_HistWriteBack} & 逻辑型 & 值为\texttt{TRUE}时，将输出内容暂存于内存中，待一个文件存满后一次性输出；值为\texttt{FALSE}时，实时输出。默认\texttt{TRUE} \\
-\bottomrule
-\end{tabular}
-\end{table}
+\texttt{USE\_SITE\_ForcingReadAhead} & 逻辑型 & 预先将所有大气驱动数据读入内存（\texttt{TRUE}）或实时读取（\texttt{FALSE}），默认\texttt{TRUE} \\
+\texttt{USE\_SITE\_HistWriteBack} & 逻辑型 & 输出内容暂存于内存（\texttt{TRUE}）或实时输出（\texttt{FALSE}），默认\texttt{TRUE} \\
 
+\end{longtable}
 
 \subsection{叶面积指数} \label{subsection_lai}
 

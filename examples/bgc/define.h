@@ -2,7 +2,7 @@
 #define GRIDBASED
 
 ! 2. Land subgrid type classification.
-#define LULC_IGBP_PFT
+#define LULC_IGBP_PC
 
 ! 3. Print debug information.
 #define CoLMDEBUG

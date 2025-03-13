@@ -1,0 +1,76 @@
+&nl_colm
+
+! An example for high resolution simulation with forcing downscaling.
+
+! --------------------------------------------------------------------
+! (1) Casename, domain, time period and step, directories, grid 
+
+   DEF_CASE_NAME = 'GreaterBay_Grid_1km_PC_VG' 
+   
+   DEF_domain%edges = 21.5
+   DEF_domain%edgen = 24.5
+   DEF_domain%edgew = 111.0
+   DEF_domain%edgee = 115.5
+   
+   DEF_simulation_time%greenwich   = .TRUE.
+   DEF_simulation_time%start_year  = 2005
+   DEF_simulation_time%start_month = 1
+   DEF_simulation_time%start_day   = 1
+   DEF_simulation_time%start_sec   = 0
+   DEF_simulation_time%end_year    = 2005
+   DEF_simulation_time%end_month   = 12
+   DEF_simulation_time%end_day     = 31
+   DEF_simulation_time%end_sec     = 86400
+   
+   DEF_simulation_time%timestep    = 1800. 
+   
+   DEF_dir_rawdata = '/path/to/CoLMrawdata/'
+   DEF_dir_runtime = '/path/to/CoLMruntime/'
+   DEF_dir_output  = '/path/to/cases'
+   
+   DEF_GRIDBASED_lon_res = 0.008333333 ! 1km in longitude
+   DEF_GRIDBASED_lat_res = 0.008333333 ! 1km in latitude
+   DEF_file_mesh_filter  = '/path/to/greaterbay_1km_filter.nc'
+
+   DEF_FAST_PC = .true.
+
+! --------------------------------------------------------------------
+! (2) Parallelization
+!     using small blocks to improve parallelization efficiency
+
+   DEF_nx_blocks = 180      ! in longitude
+   DEF_ny_blocks = 90       ! in latitude
+   DEF_PIO_groupsize = 24   ! each group has 1 IO and 23 workers
+
+! --------------------------------------------------------------------
+! (3) Offline forcing
+
+   DEF_forcing_namelist = '/path/to/forcing/ERA5.nml'
+
+   DEF_Forcing_Interp_Method   = 'bilinear'  ! Interpolation method
+
+   DEF_USE_Forcing_Downscaling = .true.
+   DEF_DS_HiresTopographyDataDir = '/path/to/HResTopo'
+
+   ! Precipitation downscaling scheme 
+   ! (from Liston and Elder, 2006)
+   DEF_DS_precipitation_adjust_scheme = 'I' 
+
+   ! Longwave radiation downscaling scheme 
+   ! (from van Tricht et al., 2016)
+   DEF_DS_longwave_adjust_scheme      = 'II' 
+   
+! --------------------------------------------------------------------
+! (4) Restart and History
+
+   DEF_WRST_FREQ = 'MONTHLY'      ! write restart file every month
+   
+   DEF_hist_lon_res = 0.008333333 ! longitude resolution for history
+   DEF_hist_lat_res = 0.008333333 ! latitude  resolution for history
+   
+   DEF_HIST_FREQ    = 'DAILY'     ! write history file every month
+   DEF_HIST_groupby = 'MONTH'     ! put one year's data in one file
+   
+   DEF_hist_vars_out_default = .true. ! output all variables
+
+/

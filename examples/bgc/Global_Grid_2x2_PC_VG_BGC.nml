@@ -1,0 +1,102 @@
+&nl_colm
+
+! An example for global simulation .
+
+! -------------------------------------------------------
+! (1) Casename , domain , time period and step
+
+   DEF_CASE_NAME = 'Global_Grid_2x2_PC_VG_BGC'
+
+   DEF_domain%edges = -90
+   DEF_domain%edgen = 90
+   DEF_domain%edgew = -180
+   DEF_domain%edgee = 180
+
+   DEF_simulation_time%greenwich    = .TRUE.
+   DEF_simulation_time%start_year   = 2005
+   DEF_simulation_time%start_month  = 1
+   DEF_simulation_time%start_day    = 1
+   DEF_simulation_time%start_sec    = 0
+   DEF_simulation_time%end_year     = 2005
+   DEF_simulation_time%end_month    = 12
+   DEF_simulation_time%end_day      = 31
+   DEF_simulation_time%end_sec      = 84600
+   DEF_simulation_time%spinup_year  = 0
+   DEF_simulation_time%spinup_month = 1
+   DEF_simulation_time%spinup_day   = 1
+   DEF_simulation_time%spinup_sec   = 0
+
+   DEF_simulation_time%timestep     = 1800.
+
+   DEF_dir_rawdata  = '/path/to/CoLMrawdata//'
+   DEF_dir_runtime  = '/path/to/CoLMruntime///'
+   DEF_dir_output   = '/path/to/cases/'
+
+   DEF_GRIDBASED_lon_res = 2.5
+   DEF_GRIDBASED_lat_res = 1.875
+
+! -------------------------------------------------------
+! (2) Parallelization
+
+   DEF_nx_blocks = 18
+   DEF_ny_blocks = 9
+   DEF_PIO_groupsize = 12
+
+! -------------------------------------------------------
+! (3) Making surface data
+
+   ! LAI setting
+   DEF_LAI_MONTHLY = .true.
+   DEF_LAI_CHANGE_YEARLY = .false.
+
+! -------------------------------------------------------
+! (4) BGC initialization, only valid when running ./mkinidata.x
+
+   DEF_USE_CN_INIT = .true.
+   DEF_file_cn_init = '/XYFS01/HDD_POOL/sysu_yjdai2/SHARE01/CoLMdata/CoLMruntime//cnsteadystate.nc'
+   
+! -------------------------------------------------------
+! (5) Parameterization scheme
+
+ ! --- Water use efficiency optimal stomata scheme ----
+ DEF_USE_WUEST = .true.
+
+ ! --- Plant hydraulic water stress scheme ------------
+ DEF_USE_PLANTHYDRAULICS = .true.
+
+ ! --- Soil surface resistance scheme -----------------
+ DEF_RSS_SCHEME = 1
+
+ ! --- Hydrology Module -------------------------------
+ DEF_USE_VariablySaturatedFlow = .true.
+ DEF_Runoff_SCHEME = 3
+ DEF_USE_SUPERCOOL_WATER = .true.
+
+ ! --- Subgrid model structure ------------------------
+ DEF_FAST_PC = .true.
+
+ ! --- Canopy DEF Interception scheme selection -------
+ DEF_Interception_scheme =1 !1: CoLM2014 ； 2:CLM4 .5; 3: CLM5; 4:Noah -MP; 5:MATSIRO ; 6: VIC
+   
+ ! -------------------------------------------------------
+ ! (5) Offline forcing
+
+   ! ----- forcing -----
+   ! Options :
+   ! PRINCETON | GSWP3   | QIAN  | CRUNCEPV4 | CRUNCEPV7 | ERA5LAND | ERA5 |  MSWX
+   ! WFDE5     | CRUJRA  | WFDEI | JRA55     | GDAS      | CMFD     | POINT
+   DEF_forcing_namelist = '/path/to/CRUJRA.nml'
+
+! -------------------------------------------------------
+! (6) Restart and History
+
+   ! ----- history -----
+   DEF_HIST_lon_res = 2.5
+   DEF_HIST_lat_res = 1.875
+   DEF_WRST_FREQ = 'YEARLY' ! write restart file frequency: HOURLY/DAILY/MONTHLY/YEARLY
+   DEF_HIST_FREQ = 'MONTHLY' ! write history file frequency: HOURLY/DAILY/MONTHLY/YEARLY
+   DEF_HIST_groupby = 'MONTH' ! history in one file: DAY/MONTH/YEAR
+
+   DEF_HIST_vars_out_default = .true.
+
+/
