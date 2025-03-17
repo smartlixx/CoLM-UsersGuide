@@ -308,8 +308,8 @@ Namelist文件的内容为：
 \lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_urban/Site_AU-Preston.nml}
 
 此实例中，\par
-1）模拟点的土壤水热参数、湖泊深度、建筑热属性参数、除屋顶反照率外的其它辐射参数、人为热模块等属性参数根据模拟点的经纬度（从\texttt{\$SITE\_fsitedata}中读取）\textbf{从CoLM自带的地表数据集中提取或者根据建筑类型赋值}；\par
-2）模拟点的建筑几何形态（建筑高度、比例等）、生态（树覆盖度、树高、湖泊覆盖度等）、辐射（屋顶反照率）、人类活动（人口密度）等城市参数来源于数据文件\texttt{\$SITE\_fsitedata}；\par
+1）模拟站点的土壤水热参数、湖泊深度、建筑热属性参数、除屋顶反照率外的其它辐射参数、人为热模块等属性参数根据模拟点的经纬度（从\texttt{\$SITE\_fsitedata}中读取）\textbf{从CoLM自带的地表数据集中提取或者根据建筑类型赋值}；\par
+2）模拟站点的建筑几何形态（建筑高度、比例等）、生态（树覆盖度、树高、湖泊覆盖度等）、辐射（屋顶反照率）、人类活动（人口密度）等城市参数来源于数据文件\texttt{\$SITE\_fsitedata}；\par
 3）模拟时间为1993年至2004年，其中2003年8月12日前为预热；\par
 4）对以下\textbf{城市参数化方案}进行了设置：
 \begin{itemize}[nosep,leftmargin=4em]
@@ -361,7 +361,7 @@ Namelist文件的内容为：
 \texttt{USE\_SITE\_urban\_geometry} & 建筑形态 & 建筑高度、建筑比例、三维建筑高边长比  \\
 \texttt{USE\_SITE\_urban\_ecology} & 城市生态 & 树覆盖度、树高、湖泊覆盖度 \\
 \texttt{USE\_SITE\_urban\_radiation} & 辐射属性 & 屋顶反照率  \\
-\texttt{USE\_SITE\_urban\_humanities} & 人类活动 & 人口密度  \\
+\texttt{USE\_SITE\_urban\_human} & 人类活动 & 人口密度  \\
 
 \bottomrule
 \end{tabular}
