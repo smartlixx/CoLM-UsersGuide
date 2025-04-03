@@ -401,17 +401,21 @@ Namelist文件的内容为：
 \textbf{第6步}：编译源代码
 
 进入到源代码主目录，运行\texttt{make}命令进行编译，
+\begin{quote}
 \begin{lstlisting}
 make
 \end{lstlisting}
+\end{quote}
 
 \bigskip
 \textbf{第7步}：运行初始化程序
 
 进入到源代码下\texttt{run}目录，运行
+\begin{quote}
 \begin{lstlisting}
 ./mkinidata.x Site_AU-Preston.nml
 \end{lstlisting}
+\end{quote}
 
 成功执行后，初始化数据会在实例目录下的restart文件夹中生成。
 
@@ -419,11 +423,11 @@ make
 \textbf{第8步}：执行主程序
 
 在\texttt{run}目录下，执行
-%\begin{quote}
+\begin{quote}
 \begin{lstlisting}
 ./colm.x Site_AU-Preston.nml
 \end{lstlisting}
-%\end{quote}
+\end{quote}
 
 成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
 

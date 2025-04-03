@@ -7,7 +7,7 @@
 
  ! surface data from SITE.
  SITE_fsitedata = '/tera12/yuanhua/data/CoLMpointdata/Urban-PLUMBER2/Sitedata/AU-Preston_site_v1.nc'
- 
+
  ! true  : surface data from SITE
  ! false : surface data is retrieved from database.
  SITE_landtype             = 13
@@ -49,7 +49,7 @@
 !(2) LAI setting
  DEF_LAI_MONTHLY       = .true.
  DEF_LAI_CHANGE_YEARLY = .true.
- 
+
 !--------------------------------------------------------------------
 !(3) Urban type schemes
 
@@ -117,7 +117,6 @@
 
  DEF_HIST_WriteBack = .true.
 
- !DEF_hist_vars_namelist = '/home/dongwz/github/master/CoLM202X/run/history.nml'
  DEF_hist_vars_out_default = .true.
 
-/ 
+/

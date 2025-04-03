@@ -40,9 +40,9 @@ CoLM源代码的目录结构见表~\ref{subdirectories}。
 
 \subsection{编译和运行}\label{comprun}
 
-CoLM的编译和运行分为软件环境的配置、数据的准备和模式运行三个主要步骤。假设代码放置的根目录为 \texttt{\$CoLMRoot}\footnote{\texttt{\$CoLMRoot}为\texttt{Shell}编程中变量值的写法，其中\texttt{CoLMRoot}为变量名，变量名前加\$指变量的值。}.
+CoLM的编译和运行分为软件环境配置、数据准备和模式运行三个主要步骤。假设代码放置的根目录为 \texttt{\$CoLMRoot}\footnote{\texttt{\$CoLMRoot}为\texttt{Shell}编程中变量值的写法，其中\texttt{CoLMRoot}为变量名，变量名前加\$指变量的值。}.
 
-\textbf{第1步}，软件环境的配置。
+\textbf{第1步}，配置软件环境。
 
 CoLM在Linux操作系统下运行，其软件需求为：
 \begin{quote}
@@ -60,7 +60,7 @@ CoLM在Linux操作系统下运行，其软件需求为：
 
 以下文件内容给出了一个典型环境下的软件配置（使用GNU编译器），文件位于\texttt{\$CoLMRoot/include/\allowbreak Makeopitons}：
 \begin{lstlisting}[language=bash, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
-# An example for file '$CoLMRoot/include/Makeoptions'.
+# An example of file '$CoLMRoot/include/Makeoptions'.
 
 # 设置编译器
 FF = mpif90
@@ -206,16 +206,16 @@ mpirun -np $np $CoLMRoot/run/colm.x $NamelistFile
 \toprule
 \textbf{地表数据名} & \textbf{区域} & \textbf{网格类型} & \textbf{次网格类型} & \textbf{分块}\\\midrule
 
-Global\_Grid\_2x2\_PFT & 全球 & 经纬度2.5\textdegree$\times$1.875\textdegree & PFT/fastPC & 18x9 \\
-Global\_Grid\_2x2\_IGBP & 全球 & 经纬度2.5\textdegree$\times$1.875\textdegree & IGBP & 18x9 \\
-Global\_Grid\_100km\_PFT & 全球 & 经纬度1.0\textdegree$\times$1.0\textdegree & PFT/fastPC & 18x9 \\
-Global\_Grid\_100km\_IGBP & 全球 & 经纬度1.0\textdegree$\times$1.0\textdegree & IGBP& 18x9 \\
-Global\_Grid\_50km\_PFT & 全球 & 经纬度0.5\textdegree$\times$0.5\textdegree & PFT/fastPC & 18x9 \\
-Global\_Grid\_50km\_IGBP\_VG & 全球 & 经纬度0.5\textdegree$\times$0.5\textdegree & IGBP& 18x9 \\
-Global\_Grid\_25km\_PFT\_VG & 全球 & 经纬度0.25\textdegree$\times$0.25\textdegree & PFT/fastPC & 30x15 \\
-Global\_Grid\_25km\_IGBP\_VG & 全球 & 经纬度0.25\textdegree$\times$0.25\textdegree & IGBP &36x18 \\
-Global\_Grid\_10km\_PFT\_VG & 全球 & 经纬度0.1\textdegree$\times$0.1\textdegree & PFT/fastPC & 18x9 \\
-Global\_Grid\_10km\_IGBP\_VG & 全球 & 经纬度0.1\textdegree$\times$0.1\textdegree & IGBP & 72x36 \\
+Global\_Grid\_2x2\_PFT & 全球 & 经纬度2.5\textdegree$\times$1.875\textdegree & PFT/fastPC & $18\times9$ \\
+Global\_Grid\_2x2\_IGBP & 全球 & 经纬度2.5\textdegree$\times$1.875\textdegree & IGBP & $18\times9$ \\
+Global\_Grid\_100km\_PFT & 全球 & 经纬度1.0\textdegree$\times$1.0\textdegree & PFT/fastPC & $18\times9$ \\
+Global\_Grid\_100km\_IGBP & 全球 & 经纬度1.0\textdegree$\times$1.0\textdegree & IGBP& $18\times9$ \\
+Global\_Grid\_50km\_PFT & 全球 & 经纬度0.5\textdegree$\times$0.5\textdegree & PFT/fastPC & $18\times9$ \\
+Global\_Grid\_50km\_IGBP\_VG & 全球 & 经纬度0.5\textdegree$\times$0.5\textdegree & IGBP& $18\times9$ \\
+Global\_Grid\_25km\_PFT\_VG & 全球 & 经纬度0.25\textdegree$\times$0.25\textdegree & PFT/fastPC & $30\times15$ \\
+Global\_Grid\_25km\_IGBP\_VG & 全球 & 经纬度0.25\textdegree$\times$0.25\textdegree & IGBP & $36\times18$ \\
+Global\_Grid\_10km\_PFT\_VG & 全球 & 经纬度0.1\textdegree$\times$0.1\textdegree & PFT/fastPC & $18\times9$ \\
+Global\_Grid\_10km\_IGBP\_VG & 全球 & 经纬度0.1\textdegree$\times$0.1\textdegree & IGBP & $72\times36$ \\
 
 \midrule
 
