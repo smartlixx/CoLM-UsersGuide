@@ -3,9 +3,9 @@
 
 \subsection{代码基本结构}
 
-CoLM包含三个主要的程序：制作地表数据、制作初始场数据和运行主程序。三个程序是相互独立的，一般情况下需按顺序依次执行。
+CoLM包含三块程序：制作地表数据（mksrfdata）、制作初始场数据（mkinidata）和运行主程序（main）。三块程序是相互独立的，一般情况下需按顺序依次执行。
 
-制作地表数据是指构建模式网格和次网格单元，以及由高分辨率的原始数据聚合得到模式单元上的地表属性。CoLM可使用经纬度单元、非结构单元、流域单元和单点四种模式网格单元，网格单元进一步再细分为植被、城市、湿地、冰川和水体五大类次网格单元，其中，植被次网格单元可选择地表覆盖类型、植被功能型和植物群落三种网格植被结构中的一种进行表征。次网格是CoLM计算模拟的基本结构单元，在运行主程序前，需首先由高分辨率的原始数据进行升尺度获取模式单元上的地表属性。原始地表数据通常为1 km及以下的高分辨率数据，包括地表覆盖类型、植被结构及属性、土壤属性、高程数据、水文学数据和城市数据等。
+制作地表数据是指构建模式网格和次网格单元，以及由高分辨率的原始数据聚合得到模式计算单元上的地表属性。CoLM可使用经纬度单元、非结构单元、流域单元和单点四种模式网格单元，网格单元进一步再细分为植被、城市、湿地、冰川和水体五大类次网格单元，其中，植被次网格单元可选择生物群落类型、植物功能型和植物群落三种网格植被结构中的一种进行表征。次网格是CoLM计算模拟的基本结构单元，在运行主程序前，需首先由高分辨率的原始数据进行升尺度获取模式单元上的地表属性。原始地表数据通常为1 km及更高分辨率数据集，包括地表覆盖类型、植被结构及属性、土壤属性、高程数据、水文学数据和城市数据等。
 
 制作初始场数据是指构建模式的初始状态。初始状态分为冷启动(Cold Start)和热启动(Warm Start)两种，其中，冷启动指的是设定一个物理上合理的土壤水、土壤温度和积雪状态等数值，热启动指的是由外部数据读入已经运行过一段时间后的模式状态。冷启动设定简单，不需要额外的数据，但通常主程序需运行比热启动更长的时间，才能达到较为平衡的状态。
 
@@ -21,14 +21,14 @@ CoLM源代码的目录结构见表~\ref{subdirectories}。
 \textbf{目录名称} & \textbf{说明} \\
 \midrule
 \texttt{include} & 包含编译选项\texttt{Makeoptions}文件和预处理宏定义文件\texttt{define.h} \\
-\texttt{preprocess} & 预处理程序，进行高分辨率地表源数据的预处理和离线大气驱动的下载和预处理 \\
-\texttt{share} & 包含模式中的部分常量、模式数据结构模块、共享的函数和输入输出模块等 \\
-\texttt{mksrfdata} & 制作地表数据；生成可执行文件\texttt{mksrfdata.x}；可独立运行 \\
-\texttt{mkinidata} & 制作初始场数据；生成可执行文件\texttt{mkinidata.x}；需在制作完地表数据后运行\\
-\texttt{main} & 模式主程序；生成可执行文件\texttt{colm.x}；需在制作完地表数据和初始场数据后运行\\
-\texttt{CaMa} & CaMa-Flood\tnote{1} ~径流模型代码和数据 \\
-\texttt{run} & 存放可执行文件和namelist文件 \\
-\texttt{postprocess} & 后处理程序，主要用于将分块输出的变量文件合并成一个整体 \\
+\texttt{preprocess} & 包含对高分辨率地表源数据进行预处理的程序和对离线大气驱动进行下载和预处理的脚本程序 \\
+\texttt{share} & 包含基本数据结构、并行计算、网格定义及尺度转换和输入输出等共享模块代码 \\
+\texttt{mksrfdata} & 包含制作地表数据的代码；生成可执行文件\texttt{mksrfdata.x}；可独立运行 \\
+\texttt{mkinidata} & 包含制作初始场数据的代码；生成可执行文件\texttt{mkinidata.x}；需在制作完地表数据后运行\\
+\texttt{main} & 包含模式主程序代码；生成可执行文件\texttt{colm.x}；需在制作完地表数据和初始场数据后运行\\
+\texttt{extends/CaMa} & 外接专门的应用扩展程序，例如，包含CaMa-Flood\tnote{1} ~径流模型代码和数据等 \\
+\texttt{run} & 包含可执行文件和namelist文件 \\
+\texttt{postprocess} & 包含后处理程序，主要用于将分块输出的变量文件合并成一个整体 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
@@ -53,13 +53,13 @@ CoLM在Linux操作系统下运行，其软件需求为：
     \item Fortran编译器；
     \item MPI（Message Passing Interface）软件包 \footnote{MPI是消息传递接口规范，CoLM中使用满足这些规范的软件库（如MPICH）来实现多个计算核心的并行。}；
     \item NetCDF（Network Common Data Form）软件包 \footnote{NetCDF是一个数据格式软件库，支持创建和读写以数组为内容的科学数据文件。}；
-    \item LAPACK（Linear Algebra PACKage）软件包\footnote{LAPACK提供了求解线性方程组、线性方程组的最小二乘解、特征值问题和奇异值问题的程序}；
+    \item LAPACK（Linear Algebra PACKage）软件包\footnote{LAPACK提供了求解线性方程组、线性方程组的最小二乘解、特征值问题和奇异值问题的程序。}；
     \item BLAS（Basic Linear Algebra Subprograms）软件包 \footnote{BLAS是执行基本向量和矩阵运算的标准代码库。}。
 \end{itemize}
 \end{quote}
 
 以下文件内容给出了一个典型环境下的软件配置（使用GNU编译器），文件位于\texttt{\$CoLMRoot/include/\allowbreak Makeopitons}：
-\begin{lstlisting}[language=bash, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
+\begin{lstlisting}[language=bash, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
 # An example of file '$CoLMRoot/include/Makeoptions'.
 
 # 设置编译器
@@ -82,7 +82,9 @@ LDFLAGS = -L$(NETCDF_LIB) -lnetcdff -lnetcdf -llapack -lblas
 
 \end{lstlisting}
 
-以上文件对编译器、NetCDF软件包的路径和编译选项等进行了配置。其中，编译器\texttt{mpif90}为系统默认的集成MPI环境的Fortran编译器，可在Linux系统中使用命令 \texttt{which mpif90} 查看其完整路径。文件中使用了NETCDF\_LIB和NETCDF\_INC两个变量对NetCDF软件包的路径进行了设置。LAPACK和BLAS是常用的软件包，这里并未对其路径进行设置，编译器会在系统默认的软件包路径中进行查找。通常来讲，用户只需确认编译器和NetCDF软件包的设置正确，即可对CoLM进行编译。
+以上文件对编译器、NetCDF软件包的路径和编译选项等进行了配置。其中，编译器\texttt{mpif90}为系统默认的集成MPI环境的Fortran编译器，可在Linux系统中使用命令 \texttt{which mpif90} 查看其完整路径。文件中使用了NETCDF\_LIB和NETCDF\_INC两个变量对NetCDF软件包的路径进行了设置。LAPACK和BLAS是常用的软件包，这里并未对其路径进行设置，编译器会在系统默认的软件包路径中进行查找。通常来讲，用户只需确认编译器和NetCDF软件包的路径设置正确，即可对CoLM进行编译。
+
+值得注意的是，运行时的软件包通常需要与编译时的软件包一致，模式才能正常运行。例如，编译时使用了系统目录下的NetCDF软件包（在Linux系统下通常位于/usr/lib/x86\_64-linux-gnu和/usr/include），而运行时Linux系统会根据用户环境变量\$LD\_LIBRARY\_PATH搜索优先使用的软件包，若搜索到的是其他软件包（如用户自己编译的NetCDF软件包，位于/home/user/soft/NetCDF/lib），则运行可能出错。
 
 \bigskip
 \textbf{第2步}，准备数据。
@@ -105,7 +107,7 @@ CoLM通过以下两个文件对一个模式实例进行设置，
 \end{quote}
 
 一个最简单的\texttt{define.h}文件的示例如下，
-\begin{lstlisting}[language=fortran, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
+\begin{lstlisting}[language=fortran, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
 ! 使用“经纬度网格”单元
 #define GRIDBASED
 ! 使用“地表覆盖类型”表征次网格单元
@@ -119,7 +121,7 @@ CoLM通过以下两个文件对一个模式实例进行设置，
 以上文件设置模式使用经纬度网格、“地表覆盖类型”次网格、使用MPI软件进行并行加速和van Genuchten-Mualem土壤水模型。
 
 一个最简单的namelist文件示例如下，
-\begin{lstlisting}[language=fortran, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
+\begin{lstlisting}[language=fortran, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
 &nl_colm
 
    ! 设定实例名称
@@ -178,7 +180,7 @@ CoLM通过以下两个文件对一个模式实例进行设置，
 /
 \end{lstlisting}
 
-以上文件设置：模拟区域为覆盖大湾区的矩形区域；起止时间为2010年1月1日至2010年1月31日，其中前10天为预热时间；模拟的时间步长为半小时；模拟分辨率为0.5\textdegree；历史数据的输出分辨率为0.5\textdegree，默认输出所有变量的日平均值，且将每月的数据放置于一个文件内；每月保存一次模式状态用于重启动；同时，对输入输出数据进行了设置。
+以上文件设置：模拟区域为覆盖大湾区的矩形区域；起止时间为2010年1月1日至2010年1月31日，其中前10天为预热时间；模拟的时间步长为半小时；模拟分辨率为0.5\textdegree；历史数据的输出分辨率为0.5\textdegree，默认输出所有变量的日平均值，且将每月的数据放置于一个文件内；每月保存一次模式状态用于重启动；同时，对输入输出数据的路径进行了设置。
 
 完成软件环境的配置、数据的准备和模式实例的配置后，在\texttt{\$CoLMRoot}目录下通过执行以下命令进行CoLM的编译,
 \begin{quote}
@@ -196,7 +198,7 @@ mpirun -np $np $CoLMRoot/run/colm.x $NamelistFile
 \end{quote}
 其中，\verb|$np| 为调用的进程数，\verb|$NamelistFile| 为配置模式实例的 namelist 文件。
 
-模式的输出数据包含地表属性数据、模式状态数据和历史输出数据三部分，分别放置于输出目录的子文件夹 \texttt{landdata}，\texttt{restart} 和 \texttt{history}中。地表数据制作、初始场数据制作和主程序运行为CoLM的完整执行流程。在保证模式版本、模拟分辨率、模拟区域、次网格类型以及并行分块数目一致的情况下，地表属性数据可以重复使用。也就是说，若存在已制作好的同版本、同分辨率、同区域、同次网格类型和同并行分块配置的地表数据，第一步地表数据制作可以被跳过。用户通过拷贝或链接已有地表数据到案例目录下的landdata来实现对已有地表数据的使用。CoLM2024发布版本同时提供了全球不同分辨率的地表数据，用户可以根据需要来选择，已有地表数据见表~\ref{landdatatable}。
+模式的输出数据包含地表属性数据、模式状态数据和历史输出数据三部分，分别放置于输出目录的子文件夹 \texttt{landdata}，\texttt{restart} 和 \texttt{history}中。地表数据制作、初始场数据制作和主程序运行为CoLM的完整执行流程。在保证模式版本、模拟分辨率、模拟区域（相同或更小）、次网格类型以及并行分块数目一致的情况下，地表属性数据可以重复使用。也就是说，若存在已制作好的同版本、同分辨率、同区域（或子区域）、同次网格类型和同并行分块配置的地表数据，第一步地表数据制作可以被跳过。用户通过拷贝或链接已有地表数据到案例目录下的landdata来实现对已有地表数据的使用。CoLM2024发布版本同时提供了全球不同分辨率的地表数据，用户可以根据需要来选择，已有地表数据见表~\ref{landdatatable}。
 
 \begin{table}[htbp]
 \caption{CoLM2024发布版本地表数据一览表}

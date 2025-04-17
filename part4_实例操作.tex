@@ -4,7 +4,7 @@
 
 \section{实例1：全球模拟}
 
-本实例配置了一个常用的全球模拟的情景。实例使用了0.5\textdegree 的经纬度网格，植物群落（PC）方案的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型。该实例是CoLM2024版本的默认配置，本实例涵盖了模型2005年1月1日到2005年12月31日的模拟。本实例关于配置文件、重启数据、地表数据和驱动数据的简介已罗列在表~\ref{ex1table}中。
+本实例配置了一个常用的全球模拟的情景。实例使用了0.5\textdegree 的经纬度网格，植物群落（PC）方案的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型。该实例是CoLM2024版本的默认配置，模拟时间段为2005年1月1日到2005年12月31日。本实例关于配置文件、重启数据、地表数据和驱动数据的简介已罗列在表~\ref{ex1table}中。
 
 \begin{table}[htbp]
 \caption{实例1配置文件和数据一览表}
@@ -30,13 +30,13 @@ Namelist文件 & Global\_Grid\_50km\_PC\_VG.nml & 否 \\
 
 \subsection{实例1配置文件}\label{ex1config}
 
-实例1的配置文件包含(1)\texttt{define.h}宏定义文件，控制模型大模块的开关，完整介绍见第三部分第~\ref{define.hux6587ux4ef6}节; (2)Namelist文件，控制模拟实例的具体信息，完整介绍见第三部分第~\ref{nml}节。
+实例1的配置文件包含（1）\texttt{define.h}宏定义文件，控制模型大模块的开关，完整介绍见第三部分第~\ref{define.hux6587ux4ef6}节; （2）Namelist文件，控制模拟实例的具体信息，完整介绍见第三部分第~\ref{nml}节。
 
 实例1的\texttt{define.h}文件内容为：
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/global/define.h}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/global/define.h}
 
 实例1的Namelist文件内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/global/Global_Grid_50km_PC_VG.nml}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/global/Global_Grid_50km_PC_VG.nml}
 
 此实例中，\par
 1）\textbf{并行化}方面，将全球分为20\textdegree$\times$20\textdegree 的数据块进行并行模拟（\texttt{DEF\_nx\_blocks=18}和\texttt{DEF\_ny\_blocks=9}），每54个进程为一个工作组（\texttt{DEF\_PIO\_groupsize=54}）；\par
@@ -76,7 +76,7 @@ Namelist文件 & Global\_Grid\_50km\_PC\_VG.nml & 否 \\
 
 \subsection{实例1气象驱动数据}\label{ex1forcing}
 
-实例1使用Climate Research Unit and Japanese Reanalysis(CRUJRA)气象驱动数据，整合了来自英国气候研究组和日本再分析项目的优质资源。本实例使用CRUJRA 2005年的数据驱动模型。使用CRUJRA驱动需要再Namelist文件中设置CRUJRA Namelist文件的地址，见~\ref{ex1config}。CRUJRA Namelist文件(CRUJRA.nml)k可以在代码根目录中的run/forcing/子目录下找到。CRUJRA Namelist文件存储了CRUJRA的格式信息和驱动地址。在新机器配置时，需要重新设置CRUJRA存储地址(\texttt{DEF\_dir\_forcing=/path/to/crujra/})。
+实例1使用Climate Research Unit and Japanese Reanalysis(CRUJRA)气象驱动数据，整合了来自英国气候研究组和日本再分析项目的优质资源。本实例使用CRUJRA 2005年的数据驱动模型。使用CRUJRA驱动需要在Namelist文件中设置CRUJRA Namelist文件的地址，见~\ref{ex1config}。CRUJRA Namelist文件(CRUJRA.nml)可以在代码根目录中的run/forcing/子目录下找到。CRUJRA Namelist文件存储了CRUJRA的格式信息和驱动地址。在新机器配置时，需要重新设置CRUJRA存储地址(\texttt{DEF\_dir\_forcing=/path/to/crujra/})。
 
 \subsection{实例1重启数据}
 
@@ -91,12 +91,12 @@ Namelist文件 & Global\_Grid\_50km\_PC\_VG.nml & 否 \\
 \bigskip
 \textbf{第2步}：建立实例运行Namelist文件
 
-在源代码\texttt{run}目录下建立用于实例运行Namelist文件，可参考章节~\ref{ex1config} Namelist文件部分进行修改或者用本指南所提供的文件\texttt{Global\_Grid\_50km\_PC\_VG.nml}覆盖。
+在任意目录下建立用于实例运行的Namelist文件，可参考章节~\ref{ex1config} Namelist文件部分进行修改或者用本指南所提供的文件\texttt{Global\_Grid\_50km\_PC\_VG.nml}覆盖。
 
 \bigskip
 \textbf{第3步}：建立实例目录
 
-用户新建实例目录，目录命名与Namelist文件的\texttt{DEF\_CASE\_NAME}设置保持一致，即Global\_Grid\_50km\_PC\_VG。本实例已提供地表数据，因此用户需手动建立实例目录。另外，需修改Namelist文件中的\texttt{DEF\_dir\_output}值为实例文件夹所在的目录（即父目录），比如：实例目录的路径是/path/to/Global\_Grid\_50km\_PC\_VG，\texttt{DEF\_dir\_output}须设置为/path/to/。
+用户新建实例目录，目录命名与Namelist文件的\texttt{DEF\_CASE\_NAME}设置保持一致（本例中即Global\_Grid\_50km\_PC\_VG）。本实例已提供地表数据，因此用户需手动建立实例目录。另外，需修改Namelist文件中的\texttt{DEF\_dir\_output}值为实例文件夹所在的目录（即父目录），比如：实例目录的路径是/path/to/Global\_Grid\_50km\_PC\_VG，\texttt{DEF\_dir\_output}须设置为/path/to/。
 
 \bigskip
 \textbf{第4步}：准备地表数据
@@ -106,7 +106,7 @@ Namelist文件 & Global\_Grid\_50km\_PC\_VG.nml & 否 \\
 \bigskip
 \textbf{第5步}：准备驱动数据
 
-解压指南所提供的本实例驱动文件\texttt{crujra2.5\-2005.tar.gz }，修改解压后的驱动配置文件\texttt{CRUJRA.nml}，改配置文件通常在\texttt{run\/forcing}目录下。通过修改变量\texttt{DEF\_dir\_forcing}设置，指定驱动路径。最后，须确保Namelist文件中的\texttt{DEF\_forcing\_namelist}设置于驱动配置文件路径一致。
+解压指南所提供的本实例驱动文件\texttt{crujra2.5-2005.tar.gz }，修改解压后的驱动配置文件\texttt{CRUJRA.nml}：通过修改变量\texttt{DEF\_dir\_forcing}设置，指定驱动路径。最后，须确保Namelist文件中的\texttt{DEF\_forcing\_namelist}设置与驱动配置文件\texttt{CRUJRA.nml}的路径一致。
 
 \bigskip
 \textbf{第6步}：编译源代码
@@ -129,11 +129,11 @@ make
 在\texttt{run}目录下，执行
 \begin{quote}
 \begin{lstlisting}
-./colm.x Site_IT-Isp.nml
+mpirun -np $nproc ./colm.x Global_Grid_50km_PC_VG.nml
 \end{lstlisting}
 \end{quote}
 
-成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
+其中，\$nproc为实际使用的计算核心数。成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
 
 
 \subsection{实例1的模拟结果展示}
@@ -175,10 +175,10 @@ Namelist文件 & Site\_IT-Isp.nml & 否 \\
 \end{table}
 
 \texttt{define.h}文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_nature/define.h}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_nature/define.h}
 
 Namelist文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_nature/Site_IT-Isp.nml}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_nature/Site_IT-Isp.nml}
 
 此实例中，\par
 1）模拟点的地表覆盖类型、植被功能型组成及占比、树高、叶面积指数和土壤水热参数从站点数据\texttt{\$SITE\_fsitedata}读取，土壤反照率、地形参数根据站点经纬度（\texttt{SITE\_lon\_location}和\texttt{SITE\_lat\_location}）\textbf{从CoLM自带的全球地表数据集中提取}；\par
@@ -224,7 +224,7 @@ Namelist文件的内容为，
 \bigskip
 \textbf{第5步}：准备驱动数据
 
-加压指南所提供的本实例驱动文件\texttt{IT-Isp\_2013-2014\_FLUXNET2015\_Met.tar.gz}，修改解压后的驱动配置文件\texttt{IT-Isp.nml}，通过变量\texttt{DEF\_dir\_forcing}设置解压得到的驱动文件\texttt{IT-Isp\_2013-2014\_FLUXNET2015\_Met.nc}所在的路径。
+解压指南所提供的本实例驱动文件\texttt{IT-Isp\_2013-2014\_FLUXNET2015\_Met.tar.gz}，修改解压后的驱动配置文件\texttt{IT-Isp.nml}，通过变量\texttt{DEF\_dir\_forcing}设置解压得到的驱动文件\texttt{IT-Isp\_2013-2014\_FLUXNET2015\_Met.nc}所在的路径。
 
 修改实例Namelist文件驱动配置文件路径\texttt{DEF\_forcing\_namelist}。
 
@@ -299,13 +299,13 @@ Namelist文件 & Site\_AU-Preston.nml & 否 \\
 \end{table}
 
 \subsection{实例3配置文件}\label{ex3config}
-实例3的配置文件包含(1) \texttt{define.h}宏定义文件，控制模型大模块的开关，本实例的SinglePoint、URBAN\_MODEL以及Campbell\_SOIL\_MODEL土壤水特征曲线模型开关通过宏定义文件控制; (2) Namelist文件，控制模拟实例的具体信息，本实例的Namelist文件的主要配置为：a) 使用站点观测的建筑形态、生态、辐射以及人类活动数据；b) 开启叶面积指数年际变化；c) 使用LCZ分类模拟城市；d) 开启城市植被、水体、人为热模拟；e) 使用CoLM2014叶片截流方案；f) spin-up结束后按时间步长输出模拟结果。
+实例3的配置文件包含（1） \texttt{define.h}宏定义文件，控制模型大模块的开关，本实例的SinglePoint、URBAN\_MODEL以及Campbell\_SOIL\_MODEL土壤水特征曲线模型开关通过宏定义文件控制; （2）Namelist文件，控制模拟实例的具体信息，本实例的Namelist文件的主要配置为：a) 使用站点观测的建筑形态、生态、辐射以及人类活动数据；b) 开启叶面积指数年际变化；c) 使用LCZ分类模拟城市；d) 开启城市植被、水体、人为热模拟；e) 使用CoLM2014叶片截流方案；f) spin-up结束后按时间步长输出模拟结果。
 
 \texttt{define.h}文件的内容为：
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_urban/define.h}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_urban/define.h}
 
 Namelist文件的内容为：
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_urban/Site_AU-Preston.nml}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/site_urban/Site_AU-Preston.nml}
 
 此实例中，\par
 1）模拟站点的土壤水热参数、湖泊深度、建筑热属性参数、除屋顶反照率外的其它辐射参数、人为热模块等属性参数根据模拟点的经纬度（从\texttt{\$SITE\_fsitedata}中读取）\textbf{从CoLM自带的地表数据集中提取或者根据建筑类型赋值}；\par
@@ -393,7 +393,7 @@ Namelist文件的内容为：
 \bigskip
 \textbf{第5步}：准备驱动数据
 
-加压指南所提供的本实例驱动文件\texttt{AU-Preston\_metforcing\_v1.tar.gz}，修改解压后的驱动配置文件\texttt{AU-Preston.nml}，通过变量\texttt{DEF\_dir\_forcing}设置解压得到的驱动文件\texttt{AU-Preston\_metforcing\_v1.nc}所在的路径。
+解压指南所提供的本实例驱动文件\texttt{AU-Preston\_metforcing\_v1.tar.gz}，修改解压后的驱动配置文件\texttt{AU-Preston.nml}，通过变量\texttt{DEF\_dir\_forcing}设置解压得到的驱动文件\texttt{AU-Preston\_metforcing\_v1.nc}所在的路径。
 
 修改实例Namelist文件驱动配置文件路径\texttt{DEF\_forcing\_namelist}。
 
@@ -479,14 +479,14 @@ Namelist文件 & Global\_Grid\_2x2\_PC\_VG-BGC.nml & 否 \\
 实例4的配置文件包含(1)\texttt{define.h}宏定义文件，控制模型大模块的开关，本实例的BGC开关通过宏定义文件控制; (2)Namelist文件，控制模拟实例的具体信息，本实例的宏定义文件和Namelist文件和实例1基本一致。其配置的主要差异包括:a)实例4的宏定义文件打开了BGC开关；b)并行化采用每12个进程一个工作组；c)叶面积指数无年际变化；d)所有碳氮库初始化时采用热启动；e)模拟分辨率和历史数据输出均改为经度2.5$\times$纬度1.875 。
 
 \texttt{define.h}文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/bgc/define.h}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/bgc/define.h}
 
 Namelist文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/bgc/Global_Grid_2x2_PC_VG_BGC.nml}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/bgc/Global_Grid_2x2_PC_VG_BGC.nml}
 
 此实例中，\par
 1）\textbf{并行化}方面，将全球分为20\textdegree$\times$20\textdegree 的数据块进行并行模拟（\texttt{DEF\_nx\_blocks=18}和\texttt{DEF\_ny\_blocks=9}），每12个进程为一个工作组，（\texttt{DEF\_PIO\_groupsize=12}）。该最优每组进程数由大量实验测试得出。实例4分辨率相对实例1更粗，计算单元更少，因此最优每组进程数量较实例1下降；\par
-2）\textbf{叶面积指数数据}使用了月变化数据（\texttt{DEF\_LAI\_MONTHLY=.true.}），且不随年份变化，仅使用2005年的叶面积指数（\texttt{DEF\_LAI\_CHANGE\_YEARLY=.false.}）。；\par
+2）\textbf{叶面积指数数据}使用了月变化数据（\texttt{DEF\_LAI\_MONTHLY=.true.}），且不随年份变化，仅使用2005年的叶面积指数（\texttt{DEF\_LAI\_CHANGE\_YEARLY=.false.}）；\par
 
 3）对以下\textbf{过程参数化方案}进行了设置，此参数化方案与实例1完全一样：
 \begin{itemize}[nosep,leftmargin=4em]
@@ -504,7 +504,7 @@ Namelist文件的内容为，
 
 4）模型模拟的起始时间为2005年1月1日，模拟的结束时间为2005年12月31日 ;\par
 
-5）模型模拟采用2.5 \textdegree $\times$ 1.875\textdegree 的经纬度网格（\texttt{DEF\_GRIDBASED\_lon\_res=2.5}和\texttt{DEF\_GRIDBASED\_lat\_res=1.875} \par
+5）模型模拟采用2.5 \textdegree $\times$ 1.875\textdegree 的经纬度网格（\texttt{DEF\_GRIDBASED\_lon\_res=2.5}和\texttt{DEF\_GRIDBASED\_lat\_res=1.875} ; \par
 
 6）使用CRUJRA数据作为\textbf{大气驱动}（\texttt{DEF\_forcing\_namelist=<path>/CRUJRA.nml}）；\par
 
@@ -579,25 +579,32 @@ make
 在\texttt{run}目录下，执行
 %\begin{quote}
 \begin{lstlisting}[xleftmargin=2.5em]
-./colm.x Site_IT-Isp.nml
+mpirun -np $nproc ./colm.x Global_Grid_50km_PC_VG-BGC.nml
 \end{lstlisting}
 %\end{quote}
 
-成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
+其中，\$nproc为实际使用的计算核心数。成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
 
 
 \subsection{实例4的模拟结果展示}
 
+实例4中，CoLM2024的发布版本实现了2005年的全球2.5 \textdegree $\times$ 1.875\textdegree 分辨率的生物地球化学循环模拟，其中植物碳库(地上生物量和地下生物量的总和)全球空间分布模拟结果见图~\ref{fig:fig_example04_totvegc}。CoLM2024模型对2005年全球植物碳库分布与全球森林分布地图一致。其中，CoLM的植物碳库在赤道附近，尤其是亚马逊雨林，具有较高的模拟结果。副热带干旱区（如撒哈拉沙漠）受水分限制导致植物碳库几乎为0。中高纬度的北方森林区域的高植物碳库带也被CoLM2024清晰的模拟出。全球植物碳库、蒸散发和降水的纬向分布相似，模拟结果展现出CoLM植物生长的水利用特征。
 
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.90\textwidth]{figures/Example04_TotvegC_Global_Grid_2x2_PC_VG.png}
+    \caption{CoLM2024生物地球化学循环模拟结果(2005年)：植物碳库($\mathrm{gC \cdot m^{-2}}$)全球分布}
+    \label{fig:fig_example04_totvegc}
+\end{figure}
 
-\section{实例5：区域高分辨率模拟}
+\section{实例5：区域高分辨率模拟与驱动数据降尺度}
 
-本实例配置了一个区域高分辨率模拟情景。实例使用了1千米的经纬度网格，植物群落（PC）方案的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并使用MPI进行并行加速。
+本实例配置了一个区域高分辨率模拟情景。实例使用了1千米的经纬度网格，植物群落（PC）方案的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并使用MPI进行并行加速。本实例中，驱动数据的网格为1/4度，远大于模式网格（1/120度），因此，在模式运行过程中，对驱动数据进行了实时降尺度。
 
 \begin{table}[htbp]
 \caption{实例5配置文件和数据一览表}
 \centering \renewcommand{\arraystretch}{1.5}
-\label{ex1table}
+\label{ex5table}
 \begin{tabular}{lp{0.4\textwidth}c}
 \toprule
 \textbf{数据名} & \textbf{文件/目录名} & \textbf{是否需要解压缩} \\\midrule
@@ -614,14 +621,14 @@ Namelist文件 & GreaterBay\_Grid\_1km\_PC\_VG.nml & 否 \\
 \end{tabular}
 \end{table}
 
-\subsection{实例5配置文件}
-实例5的配置文件包含（1）宏定义文件define.h，为控制模型大模块的开关，完整介绍见第三部分第3节; （2）Namelist文件，为控制模拟实例的具体信息，完整介绍见第三部分第4节。
+\subsection{实例5配置文件} \label{ex5config}
+如表~\ref{ex5table} 所示，实例5的配置文件包含（1）宏定义文件define.h，为控制模型大模块的开关，完整介绍见第三部分第3节; （2）Namelist文件，为控制模拟实例的具体信息，完整介绍见第三部分第4节。
 
 实例5的\texttt{define.h}文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/hires/define.h}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/hires/define.h}
 
 实例5的Namelist文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/hires/GreaterBay_Grid_1km_PC_VG.nml}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/hires/GreaterBay_Grid_1km_PC_VG.nml}
 
 此实例中，\par
 1）区域大致范围通过\texttt{DEF\_domain}进行设定，并使用文件\texttt{DEF\_file\_mesh\_filter}中的'mesh\_filter'变量进一步细化需要模拟的\textbf{区域范围}；\par
@@ -644,6 +651,8 @@ Namelist文件 & GreaterBay\_Grid\_1km\_PC\_VG.nml & 否 \\
 
 实例5模拟的是一个区域（21.5\textdegree N\textasciitilde 24.5\textdegree N, 111.0\textdegree E\textasciitilde 115.5\textdegree E）内的陆面过程，但其地表数据的制作仍基于全球原始数据。为了提高并行效率，地表制作程序将全球区域分为经向180个×纬向90个数据块，每个数据块最多包含120×120个网格单元。实例5使用了数据文件\texttt{DEF\_file\_mesh\_filter}对模拟区域的边界进行进一步的描述，文件中包含定义在经纬度网格上的变量`mesh\_filter'，其值大于0时，表示对这个网格单元进行模拟，否则将不模拟。
 
+另外，驱动数据降尺度使用的主要数据为地形信息，包括坡度、坡向、天空可视因子和地形高度角等。
+
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.90\textwidth]{figures/Example05_BilinearDownscaling.pdf}
@@ -651,6 +660,73 @@ Namelist文件 & GreaterBay\_Grid\_1km\_PC\_VG.nml & 否 \\
     \caption{高分辨率模拟实例5中，（a）使用降尺度方法和（b）不使用降尺度方法对驱动数据中的气温进行重采样的结果。图中实线为驱动数据网格（0.25度经纬度网格）}
     \label{fig:fig_hiresdownscaling}
 \end{figure}
+
+\subsection{实例5操作步骤}
+
+\textbf{第1步}：修改宏定义文件\texttt{define.h}
+
+该文件位于源代码\texttt{include}目录下，可根据章节~\ref{ex5config} 进行修改，或者用本指南提供的宏定义文件（见表\ref{ex5table}）进行覆盖。
+
+\bigskip
+\textbf{第2步}：建立实例运行Namelist文件
+
+在任意目录下建立用于实例运行的Namelist文件，可参考章节~\ref{ex5config} Namelist文件部分进行修改或者用本指南所提供的文件\texttt{GreaterBay\_Grid\_1km\_PC\_VG.nml}覆盖。
+
+\bigskip
+\textbf{第3步}：建立实例目录
+
+用户新建实例目录，目录命名与Namelist文件的\texttt{DEF\_CASE\_NAME}设置保持一致（本例中即GreaterBay\_Grid\_1km\_PC\_VG）。本实例已提供地表数据，因此用户需手动建立实例目录。另外，需修改Namelist文件中的\texttt{DEF\_dir\_output}值为实例文件夹所在的目录（即父目录），比如：实例目录的路径是/path/to/GreaterBay\_Grid\_1km\_PC\_VG，则\texttt{DEF\_dir\_output}须设置为/path/to/。
+
+\bigskip
+\textbf{第4步}：准备地表数据
+
+解压指南所提供的本实例地表数据文件\texttt{landdata.tar.gz}，解压后得到的文件夹\texttt{landdata}放置于实例目录下。
+
+\bigskip
+\textbf{第5步}：准备区域范围数据和地形数据
+
+在Namelist文件中修改变量DEF\_file\_mesh\_filter指向区域范围精细边界文件greaterbay\_1km\_filter.nc的路径。
+
+解压放置地形信息文件HResTopo.tar.gz，在Namelist文件中修改变量DEF\_DS\_\allowbreak HiresTopographyDataDir指向其存放路径。
+
+\bigskip
+\textbf{第6步}：准备驱动数据
+
+解压指南所提供的本实例驱动文件\texttt{ear5-2005.tar.gz}，修改解压后的驱动配置文件\texttt{ERA5.nml}（位于源代码目录的run/forcing文件夹下）：通过修改变量\texttt{DEF\_dir\_forcing}设置，指定驱动路径。最后，须确保Namelist文件中的\texttt{DEF\_forcing\_namelist}指向驱动配置文件\texttt{ERA5.nml}的路径。
+
+\bigskip
+\textbf{第7步}：编译源代码
+
+进入到源代码主目录，运行\texttt{make}命令进行编译，
+\begin{quote}
+\begin{lstlisting}
+make
+\end{lstlisting}
+\end{quote}
+
+\bigskip
+\textbf{第8步}：运行初始化程序
+
+本实例为用户提供了重启数据，可以依赖重启数据进行启动。解压指南所提供的本实例重启数据文件\texttt{restart.tar.gz}，解压后得到的文件夹\texttt{restart}放置于实例目录下。
+
+用户也可在run目录下执行以下命令自己制作重启动数据，
+\begin{quote}
+\begin{lstlisting}
+mpirun -np $nproc ./mkinidata.x GreaterBay_Grid_1km_PC_VG.nml
+\end{lstlisting}
+\end{quote}
+其中，\$nproc为实际使用的计算核心数。
+
+\bigskip
+\textbf{第9步}：执行主程序
+
+在\texttt{run}目录下，执行
+\begin{quote}
+\begin{lstlisting}
+mpirun -np $nproc ./colm.x GreaterBay_Grid_1km_PC_VG.nml
+\end{lstlisting}
+\end{quote}
+其中，\$nproc为实际使用的计算核心数。成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
 
 \subsection{实例5模拟结果}
 
@@ -660,12 +736,12 @@ Namelist文件 & GreaterBay\_Grid\_1km\_PC\_VG.nml & 否 \\
 
 \section{实例6：流域单元和侧向流模拟}
 
-本节配置了一个基于流域网格单元并包含侧向流模拟的实例。实例使用了流域单元网格并打开了侧向流模块，使用基于植被群落（PC）的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并基于MPI进行并行加速。
+本节配置了一个基于流域网格单元并包含侧向流模拟的实例。实例使用了流域单元网格并打开了侧向流模块，使用基于植被群落（PC）的植被结构次网格，以及van Genuchten-Mualem土壤水特征曲线模型，并基于MPI进行并行加速。其配置文件和数据信息如表~\ref{ex6table} 所示。
 
 \begin{table}[htbp]
 \caption{实例6配置文件和数据一览表}
 \centering \renewcommand{\arraystretch}{1.5}
-\label{ex1table}
+\label{ex6table}
 \begin{tabular}{lcc}
 \toprule
 \textbf{数据名} & \textbf{文件/目录名} & \textbf{是否需要解压缩} \\\midrule
@@ -674,21 +750,21 @@ Namelist文件 & PearlRiver\_Catch\_250km2\_PC\_VG .nml & 否 \\
 流域单元网格文件 & PearlRiver\_250km2.nc & 否\\
 网格单元信息文件 & PearlRiver\_250km2.nc & 否 \\
 地表数据 & landdata.tar.gz & 是 \\
-气象驱动数据 & ear5-2024-2005.tar.gz & 是 \\
+气象驱动数据 & ear5-2003-2005.tar.gz & 是 \\
 重启数据 & restart.tar.gz & 是 \\
 
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{实例6配置文件}
+\subsection{实例6配置文件}\label{ex6config}
 实例6的配置文件包含（1）宏定义文件define.h，为控制模型大模块的开关，完整介绍见第三部分第3节;（2）Namelist文件，为控制模拟实例的具体信息，完整介绍见第三部分第4节。
 
 实例6中\texttt{define.h}文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/catchment/define.h}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/catchment/define.h}
 
 Namelist文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/catchment/PearlRiver_Catch_250km2_PC_VG.nml}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/catchment/PearlRiver_Catch_250km2_PC_VG.nml}
 
 此实例中，\par
 1）区域大致范围通过\texttt{DEF\_domain}进行设定；\par
@@ -723,6 +799,73 @@ Namelist文件的内容为，
 
 实例6基于流域单元网格对侧向流过程进行了模拟（开关为宏定义文件中的\texttt{\#define CatchLateralFlow}）。进行侧向流模拟时，还需模式单元的相邻关系、边界长度等信息，这些数据放置于文件\texttt{DEF\_ElementNeighbour\_file}中。
 
+\subsection{实例6操作步骤}
+
+\textbf{第1步}：修改宏定义文件\texttt{define.h}
+
+该文件位于源代码\texttt{include}目录下，可根据章节~\ref{ex6config} 进行修改，或者用本指南提供的宏定义文件（见表\ref{ex6table}）进行覆盖。
+
+\bigskip
+\textbf{第2步}：建立实例运行Namelist文件
+
+在任意目录下建立用于实例运行的Namelist文件，可参考章节~\ref{ex6config} Namelist文件部分进行修改或者用本指南所提供的文件\texttt{PearlRiver\_Catch\_250km2\_PC\_VG.nml}覆盖。
+
+\bigskip
+\textbf{第3步}：建立实例目录
+
+用户新建实例目录，目录命名与Namelist文件的\texttt{DEF\_CASE\_NAME}设置保持一致（本例中即PearlRiver\_Catch\_250km2\_PC\_VG）。本实例已提供地表数据，因此用户需手动建立实例目录。另外，需修改Namelist文件中的\texttt{DEF\_dir\_output}值为实例文件夹所在的目录（即父目录），比如：实例目录的路径是/path/to/PearlRiver\_Catch\_250km2\_PC\_VG，则\texttt{DEF\_dir\_output}须设置为/path/to/。
+
+\bigskip
+\textbf{第4步}：准备地表数据
+
+解压指南所提供的本实例地表数据文件\texttt{landdata.tar.gz}，解压后得到的文件夹\texttt{landdata}放置于实例目录下。
+
+\bigskip
+\textbf{第5步}：准备区域流域网格和单元信息数据
+
+在Namelist文件中修改变量DEF\_CatchmentMesh\_data指向流域网格信息文件PearlRiver\_250km2.nc的路径。
+
+在Namelist文件中修改变量DEF\_ElementNeighbour\_file指向网格单元信息文件PearlRiver\_250km2.nc的路径。
+
+\bigskip
+\textbf{第6步}：准备驱动数据
+
+解压指南所提供的本实例驱动文件\texttt{ear5-2003-2005.tar.gz}，修改解压后的驱动配置文件\texttt{ERA5.nml}（位于源代码目录的run/forcing文件夹下）：修改变量\texttt{DEF\_dir\_forcing}指定驱动数据路径。最后，须确保Namelist文件中的\texttt{DEF\_forcing\_namelist}指向驱动配置文件\texttt{ERA5.nml}的路径。
+
+\bigskip
+\textbf{第7步}：编译源代码
+
+进入到源代码主目录，运行\texttt{make}命令进行编译，
+\begin{quote}
+\begin{lstlisting}
+make
+\end{lstlisting}
+\end{quote}
+
+\bigskip
+\textbf{第8步}：运行初始化程序
+
+本实例为用户提供了重启数据，可以依赖重启数据进行启动。解压指南所提供的本实例重启数据文件\texttt{restart.tar.gz}，解压后得到的文件夹\texttt{restart}放置于实例目录下。
+
+用户也可在run目录下执行以下命令自己制作重启动数据，
+\begin{quote}
+\begin{lstlisting}
+mpirun -np $nproc ./mkinidata.x PearlRiver_Catch_250km2_PC_VG.nml
+\end{lstlisting}
+\end{quote}
+其中，\$nproc为实际使用的计算核心数。
+
+\bigskip
+\textbf{第9步}：执行主程序
+
+在\texttt{run}目录下，执行
+\begin{quote}
+\begin{lstlisting}
+mpirun -np $nproc ./colm.x PearlRiver_Catch_250km2_PC_VG.nml
+\end{lstlisting}
+\end{quote}
+其中，\$nproc为实际使用的计算核心数。成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
+
 \subsection{实例6模拟结果}
 
 图\ref{fig:fig_pearlriver_discharge}展示了实例6中CoLM2024对珠江流域石角、梧州两个水文站点处径流所做的预报结果。尽管模型从2003年启动，只进行了1年时间的预热，且参数均为默认值，CoLM2024仍能较好地反映径流的变化，对径流量的预测也与观测基本吻合。
@@ -742,7 +885,7 @@ Namelist文件的内容为，
 \begin{table}[htbp]
 \caption{实例7配置文件和数据一览表}
 \centering \renewcommand{\arraystretch}{1.5}
-\label{unstrtable}
+\label{ex7table}
 \begin{tabular}{lcc}
 \toprule
 \textbf{数据名} & \textbf{文件/目录名} & \textbf{是否需要解压缩} \\\midrule
@@ -757,14 +900,14 @@ Namelist文件 & PearlRiver\_unstr\_2500km2\_IGBP\_VG.nml & 否 \\
 \bottomrule
 \end{tabular}
 \end{table}
-\subsection{实例7配置文件}
+\subsection{实例7配置文件}\label{ex7config}
 实例7的配置文件包含（1）宏定义文件define.h，为控制模型大模块的开关，完整介绍见第三部分第3节;（2）Namelist文件，为控制模拟实例的具体信息，完整介绍见第三部分第4节。
 
 实例7中\texttt{define.h}文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/unstructured/define.h}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/unstructured/define.h}
 
 Namelist文件的内容为，
-\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{olive}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/unstructured/PearlRiver_unstr_2500km2_IGBP_VG.nml}
+\lstinputlisting[language=fortran, basicstyle=\linespread{1.0}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]{examples/unstructured/PearlRiver_unstr_2500km2_IGBP_VG.nml}
 
 此实例中，\par
 1）区域大致范围通过\texttt{DEF\_domain}进行设定；\par
@@ -795,7 +938,69 @@ Namelist文件的内容为，
 
 实例7基于蜂窝六边形离散格网格，模拟珠江流域的陆面过程。其地表数据的制作仍基于全球原始数据，本
 实验采用土地类型数量、叶面积指数均方根误差作为细化阈值，对所选区域内网格进行单次细化。实例7中网格划分数据来自文件~DEF\_file\_mesh,其包含变量`elmindex'，标记了每个500米的基础格点所属的网格编号。六边形网格的划分结果见图~\ref{fig:fig_pearlriver_unstr}。
+\subsection{实例7操作步骤}
+\textbf{第1步}：修改宏定义文件\texttt{define.h}
 
+该文件位于源代码\texttt{include}目录下，可根据章节~\ref{ex7config} 进行修改，或者用本指南提供的宏定义文件（见表\ref{ex7table}）进行覆盖。
+
+\bigskip
+\textbf{第2步}：建立实例运行Namelist文件
+
+在任意目录下建立用于实例运行的Namelist文件，可参考章节~\ref{ex7config} Namelist文件部分进行修改或者用本指南所提供的文件\texttt{PearlRiver\_unstr\_250km2\_IGBP\_VG.nml}覆盖。
+
+\bigskip
+\textbf{第3步}：建立实例目录
+
+用户新建实例目录，目录命名与Namelist文件的\texttt{DEF\_CASE\_NAME}设置保持一致（本例中即PearlRiver\_Unstr\_250km2\_PC\_VG）。本实例已提供地表数据，因此用户需手动建立实例目录。另外，需修改Namelist文件中的\texttt{DEF\_dir\_output}值为实例文件夹所在的目录（即父目录），比如：实例目录的路径是/path/to/PearlRiver\_Unstr\_250km2\_PC\_VG，则\texttt{DEF\_dir\_output}须设置为/path/to/。
+
+\bigskip
+\textbf{第4步}：准备地表数据
+
+解压指南所提供的本实例地表数据文件\texttt{landdata.tar.gz}，解压后得到的文件夹\texttt{landdata}放置于实例目录下。
+
+\bigskip
+\textbf{第5步}：准备非结构网格信息数据
+
+在Namelist文件中修改变量DEF\_file\_mesh指向非结构网格信息数据文件PearlRiver\_patchtype\_NXP0144\_mode6.nc的路径。
+
+\bigskip
+\textbf{第6步}：准备驱动数据
+
+解压指南所提供的本实例驱动文件\texttt{JRA55-2003-2005.tar.gz}，修改解压后的驱动配置文件\texttt{JRA55.nml}（位于源代码目录的run/forcing文件夹下）：修改变量\texttt{DEF\_dir\_forcing}指定驱动数据路径。最后，须确保Namelist文件中的\texttt{DEF\_forcing\_namelist}指向驱动配置文件\texttt{JRA55.nml}的路径。
+
+\bigskip
+\textbf{第7步}：编译源代码
+
+进入到源代码主目录，运行\texttt{make}命令进行编译，
+\begin{quote}
+\begin{lstlisting}
+make
+\end{lstlisting}
+\end{quote}
+
+\bigskip
+\textbf{第8步}：运行初始化程序
+
+本实例为用户提供了重启数据，可以依赖重启数据进行启动。解压指南所提供的本实例重启数据文件\texttt{restart.tar.gz}，解压后得到的文件夹\texttt{restart}放置于实例目录下。
+
+用户也可在run目录下执行以下命令自己制作重启动数据，
+\begin{quote}
+\begin{lstlisting}
+mpirun -np $nproc ./mkinidata.x PearlRiver_unstr_250km2_IGBP_VG.nml
+\end{lstlisting}
+\end{quote}
+其中，\$nproc为实际使用的计算核心数。
+
+\bigskip
+\textbf{第9步}：执行主程序
+
+在\texttt{run}目录下，执行
+\begin{quote}
+\begin{lstlisting}
+mpirun -np $nproc ./colm.x PearlRiver_unstr_250km2_IGBP_VG.nml
+\end{lstlisting}
+\end{quote}
+其中，\$nproc为实际使用的计算核心数。成功执行后，模式运行结果会在实例目录下的history文件夹中输出。
 
 \subsection{实例7模拟结果}
 
@@ -819,10 +1024,10 @@ Namelist文件的内容为，
 
 
 \section{辅助工具包}\label{辅助工具包}
-CoLM2024的辅助工具包包括案例创建、案例复制、案例代码比较、创建配置文件、案例代码更新和拷贝代码6个命令组成，这6个命令互相调用，集成不同的功能脚本。create\_newcase和create\_clone是两个案例创建功能脚本，create\_namelist，create\_script、create\_header和copy\_code是四个基础脚本，用于辅助案例创建的。update\_casecode用于版本控制后的案例代码更新。diff\_casecode用于比较两个案例之间，案例和主代码之间的差异。辅助工具包主要是基于案例的概念进行打造的，每个案例拥有独立案例目录，案例目录下包括独立的代码和配置，也就是说对于案例代码的修改，将不会影响其他案例和主代码，这大大地方便模式开发者对于版本的灵活控制。
+CoLM2024的辅助工具包包括案例创建、案例复制、案例代码比较、创建配置文件、案例代码更新和拷贝代码6个命令组成，这6个命令互相调用，集成不同的功能脚本。create\_newcase和create\_clone是两个案例创建功能脚本，create\_namelist，create\_script、create\_header和copy\_code是四个基础脚本，用于辅助案例的创建。update\_casecode用于版本控制后的案例代码更新。diff\_casecode用于比较两个案例之间，案例和主代码之间的差异。辅助工具包主要是基于案例的概念进行打造的，每个案例拥有独立案例目录，案例目录下包括独立的代码和配置，也就是说对于案例代码的修改，将不会影响其他案例和主代码，这大大地方便模式开发者对于版本的灵活控制。
 
 \subsection{案例目录的结构}
-\subsubsection{案例目录的结构}
+% \subsubsection{案例目录的结构}
 执行辅助工具包将自动生成案例目录，案例目录由若干子目录和文件组成，包括代码目录(bld)，运行脚本(mksrf.submit, init.submit和case.submit)，模拟配置文件(namelist文件)，历史文件目录(history$\slash$)，重启文件目录(restart$\slash$)和地表数据目录(landdata$\slash$)。其中，代码目录包括源代码目录(bld$\slash$main$\slash$, bld$\slash$mkinidata$\slash$, bld$\slash$mksrfdata$\slash$和bld$\slash$share$\slash$，编译配置文件(bld$\slash$include$\slash$Makeoption)和宏配置文件(bld$\slash$include$\slash$define.h)。历史文件(见章节~\ref{history})、重启文件(见章节~\ref{restart})、地表数据(见章节~\ref{landdata})、namelist文件(见章节~\ref{nml})和宏配置文件(见章节~\ref{define.hux6587ux4ef6})的功能和可选项已在前面章节中详细介绍。代码目录和运行脚本是辅助运行工具包中的新内容。运行脚本用于队列系统的任务提交(如SLURM、LSF和QBS等队列系统)，代码目录独立于主目录的代码，可以用于案例的代码修改和初期调试，宏配置文件也在该目录下。修改该目录下的代码或宏文件之后，可以直接编译并单独应用于该案例。
 
 \subsection{辅助工具包的配置}
@@ -865,7 +1070,7 @@ FORCINGPATH & \textasciitilde/CoLM\_Forcing/ &气象驱动数据地址 \\
 \end{tabular}
 \end{table}
 
-如须使用队列系统进行任务提交，需要通过编辑队列系统脚本格式文件来配置任务脚本的队列系统头信息格式(run$\slash$batch.config)。
+如需使用队列系统进行任务提交，需要通过编辑队列系统脚本格式文件来配置任务脚本的队列系统头信息格式(run$\slash$batch.config)。
 
 \begin{lstlisting}
 ##run/batch.config
@@ -984,7 +1189,7 @@ BGC模型 & -b & 关 & 无& 无 -c\\
 
 \subsection{案例的编译和运行}
 \subsubsection{案例的编译}
-对于案例代码的编译需要进入bld目录，并运行make命令。make前要确认编译配置文件(bld$\slash$include$\slash$Makeoption)的设置是否正确，包括netcfd库，Fortran编译器的选项和路径等(见章节~\ref{comprun})。
+对于案例代码的编译需要进入bld目录，并运行make命令。make前要确认编译配置文件(bld$\slash$include$\slash$Makeoption)的设置是否正确，包括netCDF库，Fortran编译器的选项和路径等(见章节~\ref{comprun})。
 
 \subsubsection{案例目录的运行}
 对于典型案例我们提供了适用于队列系统任务提交的三个脚本：地表数据制作任务提交脚本mksrf.submit，初始化任务提交脚本init.submit和模型运行任务提交脚本case.submit，他们分别对应章节~\ref{runcolm}中提到的三个colm运行步骤：地表数据制作、初始场数据制作和主程序运行。运行前需要检查队列系统所需要核数的设置是否和运行mpirun中要求的核数一致，其他内存和队列等配置是否符合服务器的要求。
@@ -1057,7 +1262,7 @@ BGC预热开关 & -i &none & none; nd; sasund& 始终有效 \\
 
 \subsubsection{案例脚本的创建 --- create\_script}
 
-create\_script可以帮助用户生成可用于队列系统的三个任务脚本,1)地表数据制作程序提交脚本mksrf.submit； 2)冷启动程序提交脚本init.submit；3)CoLM程序提交脚本case.submit。每个任务脚本根据batch.config和machine.config的内容来完成头信息的配置，它指定节点数目、CPU数目、内存使用和运行时间长度。create\_namelist脚本所有选项一览表见表~\ref{tab:createscript_option}。
+create\_script可以帮助用户生成可用于队列系统的三个任务脚本,1)地表数据制作程序提交脚本mksrf.submit； 2)冷启动程序提交脚本init.submit；3)CoLM程序提交脚本case.submit。每个任务脚本根据batch.config和machine.config的内容来完成头信息的配置，它指定节点数目、CPU数目、内存使用和运行时间长度。create\_script脚本所有选项一览表见表~\ref{tab:createscript_option}。
 
 create\_script根据BGC预热开关的设置(-i选项)，为case.submit配置三种不同的预热方式：1) none, 2) nd， 3) sausund。BGC预热要求用脚本来控制单年驱动循环，1) none方式不包含BGC预热，可以用于非循环的模拟，为默认方案；2) nd方式为一年驱动循环的预热方式，case.submit中包含循环末尾对重启文件的重命名(时间戳的重命名)，默认完成100次循环，可生脚本后通过手动编辑case.submit进行修改。3) sasund方式同为1年驱动循环的预热，case.submit中包含循环末尾对重启文件的重命名(时间戳重命名)，默认完成130次循环，但前100次为半解析加速预热，后三十次为普通预热方式，类同于nd方式。
 

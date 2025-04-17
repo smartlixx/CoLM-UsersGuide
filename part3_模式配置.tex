@@ -2,7 +2,7 @@
 
 \section{编译时配置：宏定义文件\texttt{define.h}}\label{define.hux6587ux4ef6}
 
-模式使用了条件编译来实现各种模块或功能的打开和关闭，用户可打开\texttt{include/\allowbreak \texttt{define.h}}文件进行修改，可使用的模块和功能选项见表~\ref{table_define}。
+模式使用了条件编译来实现各种大模块或功能的打开和关闭，用户可打开\texttt{include/\allowbreak \texttt{define.h}}文件进行修改，可使用的模块和功能选项见表~\ref{table_define}。
 {\small
 \begin{longtable}{ll}
 \caption{\texttt{define.h}中的模块和功能选项} \label{table_define} \\
@@ -41,16 +41,18 @@ vanGenuchten\_Mualem\_SOIL\_MODEL & van Genuchten \& Mualem模型 \\
 \hline
 \colorbox{gray}{\textcolor{white}{\bf{开关}}} & \bf{侧向流模块} \\
 CatchLateralFlow &  是否模拟侧向流过程 \\
- & 注：仅当使用流域单元网格时可用 \\
+ & 注：仅当使用流域单元网格时有效 \\
 \hline
 \colorbox{gray}{\textcolor{white}{\bf{开关}}} & \bf{CaMa-Flood径流模型} \\
 CaMa\_Flood &  是否耦合CaMa-Flood径流模型 \\
 \hline
 \colorbox{gray}{\textcolor{white}{\bf{开关}}} & \bf{生物地球化学模块} \\
 BGC &  是否模拟生物地球化学过程 \\
+& 注：仅当使用“植被功能类型”次网格结构时有效 \\
 \hline
 \colorbox{gray}{\textcolor{white}{\bf{开关}}} & \bf{作物模块} \\
 CROP &  是否模拟作物过程 \\
+& 注：仅当使用使用BGC模块时有效 \\
 \hline
 \colorbox{gray}{\textcolor{white}{\bf{开关}}} & \bf{土地利用土地覆盖变化模块} \\
 LULCC &  是否进行土地利用和土地覆盖变化模拟 \\
@@ -72,6 +74,29 @@ CoLMDEBUG &  是否显示模式调试信息 \\
 SrfdataDiag &  \makecell[l]{是否对聚合得到的陆面属性数据\\进行诊断输出} \\
 
 \end{longtable}}
+
+define.h 中的选项一般与大体量的数据或者模式代码相关，当改变这些选项时，需对模式代码进行重新编译。
+
+CoLM有四种模式单元的网格结构可以选择：经纬度网格、非结构网格、流域单元网格和单点模式。在Namelist文件中（见第\ref{nml}节）对网格进行进一步的设置：对经纬度网格，可设置使用给定分辨率的等间距网格或者由文件读入不等距网格；对非结构网格和流域单元网格，需从文件读入模式单元划分数据；对单点模式，需指定站点位置。
+
+次网格的划分在模式单元内部进行，划分后的次网格单元被称为斑块（patch）。斑块的划分使用定义在细网格上的地表覆盖类型和植被结构及属性数据进行，从大类上分为五类：植被 (含裸土)、城市、湿地、冰川和水体。不同次网格结构的区别主要在于对植被（含裸土）斑块的划分。对基于地表覆盖类型的次网格结构（LULC\_USGS 或LULC\_IGBP），斑块由读入的USGS或者MODIS\_IGBP数据直接聚合生成。对基于植被功能类型（LULC\_IGBP\_PFT）或植被群落（LULC\_IGBP\_PC）的次网格结构，进一步使用植被结构及属性数据，对地表覆盖类型中的植被（含裸土）斑块进行植被功能类型的细分，这两种次网格结构均可选择对一个模式单元内的植被（含裸土）斑块进行合并后细分，或者对每个植被（含裸土）斑块进行单独细分。
+
+对于作物斑块，当作物模式未打开时，作物被当成一种特殊的自然植被进行模拟，此时斑块占据的空间区域是不重合的；当打开作物模式（CROP）时，进一步根据作物斑块内包含的作物分类及组成比例 (外部数据读取) 将作物斑块拆分为多个相互独立的斑块进行模拟计算，拆分后的作物斑块内只有单一的作物类型，每种作物的土壤计算保持独立，不共享土壤水热等环境，此时一个模式单元内的多个作物斑块在空间上是重合的。
+
+城市斑块与作物类似，当城市模式未打开时，城市被当成一种地表覆盖进行模拟，即薄板城市模型（Slab Urban）；当城市模式（URBAN\_MODEL）打开时，每个模式格点根据包含的城市类型和组成比例分别建立相互独立的斑块进行模拟计算。
+
+CoLM 中的土壤水分曲线模型有两种选择：Campbell模型和van Genuchten \& Mualem 模型。模式会根据编译选项中的选择，对需要的参数数据进行聚合升尺度。
+
+CoLM可使用两个方案对侧向流进行模拟：一是与CaMa\_Flood径流模型进行耦合，一方面，CaMa\_Flood从CoLM获取产流数据，模拟径流和洪范等过程，另一方面，CaMa\_Flood亦可向CoLM反馈水深等状态变量，进行双向耦合；二是基于流域单元网格和流域侧向流模块（CatchLateralFlow），对动态的坡面流、地下水侧向流和河道径流进行模拟。
+
+开关USEMPI主要用于对模式进行并行加速，需要模式运行在支持MPI的软件环境中。
+
+RangeCheck选项打开时，模式会在运行时输出状态变量的值的范围，以帮助用户判断运行结果在数值上是否合理。RangeCheck选项打开时对模式运行时间的影响较小，但对长模拟时间的案例可能形成较大的日志文件。
+
+CoLMDEBUG选项打开时，会对水分和能量平衡进行更严格的检查，模式可能会因未通过平衡检查而中断。
+
+CoLM2024中，聚合得到的地表参数被保存成无结构的向量数据，以适应多种网格结构和减少数据存储量，但不便于对参数聚合的结果进行诊断。SrfdataDiag选项打开时，模式会额外将无结构的向量数据映射到经纬度网格上并写入单独的文件，以方便用可视化软件（如ncview）对聚合得到的地表参数进行查看。打开SrfdataDiag选项会增加制作地表数据的时间，但它对模式运行不是必要的。
+
 
 \section{运行时配置：Namelist文件}\label{nml}
 
@@ -109,7 +134,7 @@ SrfdataDiag &  \makecell[l]{是否对聚合得到的陆面属性数据\\进行�
 \texttt{DEF\_simulation\_time\%spinup\_month} & 整型 & 模式预热结束月份 \\
 \texttt{DEF\_simulation\_time\%spinup\_day} & 整型 & 模式预热结束月中的第几天 \\
 \texttt{DEF\_simulation\_time\%spinup\_sec} & 整型 & 模式预热结束天中的第几秒 \\
-\texttt{DEF\_simulation\_time\%spinup\_repeat} & 整型 & 模式预热重复的次数 \\
+\texttt{DEF\_simulation\_time\%spinup\_repeat} & 整型 & 模式预热阶段循环运行的次数，默认1次 \\
 \texttt{DEF\_simulation\_time\%timestep} & 浮点型 & 模拟的时间步长，默认值为1800秒 \\
 \bottomrule
 \end{tabular}
@@ -145,12 +170,14 @@ CoLM可以采用串行方式运行，方便对代码进行调试；也可以并�
 
 为了减少IO进程与Worker进程间的数据交换量，模式将每个IO进程与多个Worker进程进行了绑定，IO进程负责的数据块上的计算任务会分发给与之绑定的Worker进程。一个IO进程和与之绑定的多个Worker进程组成一个进程组，进程组的大小可在模式运行时由\texttt{DEF\_PIO\_groupsize}进行设定。
 
+值得注意的是，一个进程组包含一个IO进程和多个Worker进程，进程组的个数为模式使用的总IO进程和Worker进程数之和除以DEF\_PIO\_groupsize. 实际运行时，当进程组的数量大于数据块的数量时（DEF\_PIO\_groupsize设置过小），会产生闲置的进程组，因此，模式将进程组的数量设置为数据块的数量，使用总IO进程和Worker进程数之和除以数据块的数量重新计算一个进程组中进程的数量，以替代DEF\_PIO\_groupsize.
+
 数据分块及MPI并行相关namelist文件中变量见表~\ref{table_nl_blocks_mpi}。
 
 \begin{table}[!htbp] \small
 \caption{Namelist变量：数据分块及MPI并行} \label{table_nl_blocks_mpi}
 \centering \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{lcl}
+\begin{tabular}{lcp{0.5\textwidth}}
 \toprule
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
 \texttt{DEF\_nx\_blocks} & 整型 & 经度方向全球分块的数目（要求可被360整除）\\
@@ -185,7 +212,7 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 \texttt{DEF\_ElementNeighbour\_file} & 字符串 & 计算侧向流所需相邻单元的编号、边界长度等数据文件。仅在使用流域单元网格且计算侧向流时需要 \\
 \texttt{DEF\_GRIDBASED\_lon\_res} & 浮点型 & 定义了\textbf{经纬度网格单元}的经向分辨率，当\texttt{DEF\_file\_mesh}指向的文件不存在时有效 \\
 \texttt{DEF\_GRIDBASED\_lat\_res} & 浮点型 & 定义了\textbf{经纬度网格单元}的纬向分辨率，当\texttt{DEF\_file\_mesh}指向的文件不存在时有效 \\
-\texttt{DEF\_file\_mesh\_filter} & 字符串 & 使用此文件，可从模拟区域中屏蔽掉部分子区域或格点。文件中数据变量名为`mesh\_filter'，变量值为正表示模拟，否则表示不模拟 \\
+\texttt{DEF\_file\_mesh\_filter} & 字符串 & 使用此文件，可从模拟区域中屏蔽掉部分子区域或格点。文件中数据变量名为`mesh\_filter'，变量值为正表示模拟，否则表示不模拟。`mesh\_filter'的网格可与模式单元网格不一致 \\
 \midrule
 \textbf{2. 次网格单元} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
@@ -242,55 +269,13 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 
 对单点进行模拟时，可以用站点的地表数据替代由全球格点数据中提取的数据。站点地表数据存放于文件\texttt{SITE\_fsitedata}中，在\texttt{namelist}文件中，使用变量\texttt{USE\_SITE\_\allowbreak\$data}来指定数据来源，详见表~\ref{table_nl_singlepoint}。
 
+站点地表覆盖类型设置的优先级顺序为：1）当变量SITE\_landtype值有效时，使用SITE\_landtype的值；2）否则，当USE\_SITE\_landtype为TRUE且SITE\_fsitedata文件中有地表覆盖类型变量时，使用文件中的数值；3）以上都不满足时，使用由全球基础地表数据中读取的值。
+
+对使用\texttt{USE\_SITE\_\allowbreak\$data}指定来源的其他变量，若SITE\_fsitedata文件中不存在该变量，则使用由全球基础地表数据中读取的值。
+
 使用站点的气象观测资料驱动模式时，可将驱动数据一次读入内存来提高运行速度，在\texttt{namelist}文件中，使用变量\texttt{USE\_SITE\_ForcingReadAhead}来打开这一功能。
 
 对变量历史进行输出时，也可将输出内容保存于内存中，待一个文件的内容存满后一次性输出，在\texttt{namelist}文件中，使用变量\texttt{USE\_SITE\_HistWriteBack}来打开这一功能。
-
-% \begin{table}[!htbp] \small
-% \caption{Namelist变量：单点模拟}
-% \label{table_nl_singlepoint}
-% \centering \renewcommand{\arraystretch}{1.5}
-% \begin{tabular}{lcp{0.45\textwidth}}
-% \toprule
-% \textbf{1.数据文件} & & \\
-% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-% \texttt{SITE\_fsitedata} & 字符串 & 站点观测地表属性数据存放的文件 \\\midrule
-% \textbf{2.基本信息} & & \\
-% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-% \texttt{SITE\_lon\_location} & 浮点型 & 站点经度 \\
-% \texttt{SITE\_lat\_location} & 浮点型 & 站点纬度 \\
-% \texttt{SITE\_landtype} & 整型 & 站点地表覆盖类型 \\
-% \midrule
-% \multicolumn{3}{l}{\textbf{3. 数据来源}（\textbf{\texttt{TRUE}}代表站点观测数据，\textbf{\texttt{FALSE}}代表全球格点数据）} \\
-% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-% \texttt{USE\_SITE\_landtype} & 逻辑型 & 地表覆盖类型数据来源。默认\texttt{FALSE} \\
-% \texttt{USE\_SITE\_pctpfts} & 逻辑型 & 植被百分比数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_pctcrop} & 逻辑型 & 作物百分比数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_htop} & 逻辑型 & 树高数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_LAI} & 逻辑型 & 叶面积指数数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_lakedepth} & 逻辑型 & 湖泊深度数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_soilreflectance} & 逻辑型 & 土壤反射数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_soilparameters} & 逻辑型 & 土壤水力和热力参数数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_dbedrock} & 逻辑型 & 基岩深度数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_topography} & 逻辑型 & 高程数据来源。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_urban\_geometry} & 逻辑型 & 城市建筑形态数据来源。默认\texttt{TRUE} \\
-% & &（建筑高度、建筑比例、三维建筑高边长比或街谷高宽比） \\
-% \texttt{USE\_SITE\_urban\_ecology} & 逻辑型 & 城市生态数据来源。默认\texttt{TURE} \\
-% & &（树覆盖度、树高、树LAI/SAI、水体覆盖度）\\
-% \texttt{USE\_SITE\_urban\_radiation} & 逻辑型 & 城市辐射属性数据来源。默认\texttt{TRUE} \\
-% & &（屋顶、墙面、透水面以及不透水面的反照率以及发射率） \\
-% \texttt{USE\_SITE\_urban\_thermal} & 逻辑型 & 城市热力属性数据来源。默认\texttt{FALSE} \\
-% & &（屋顶、墙面、不透水面的热容量以及热导率） \\
-% \texttt{USE\_SITE\_urban\_human} & 逻辑型 & 城市人类活动数据来源。默认\texttt{TRUE} \\
-% & &（人口密度）\\
-% \midrule
-% \textbf{4.运行时的优化} & & \\
-% \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-% \texttt{USE\_SITE\_ForcingReadAhead} & 逻辑型 & 值为\texttt{TRUE}时，预先将所有大气驱动数据读入内存；值为\texttt{FALSE}时，实时读取。默认\texttt{TRUE} \\
-% \texttt{USE\_SITE\_HistWriteBack} & 逻辑型 & 值为\texttt{TRUE}时，将输出内容暂存于内存中，待一个文件存满后一次性输出；值为\texttt{FALSE}时，实时输出。默认\texttt{TRUE} \\
-% \bottomrule
-% \end{tabular}
-% \end{table}
 
 \begin{longtable}{lcp{0.45\textwidth}}
 \caption{Namelist 变量：单点模拟} \label{table_nl_singlepoint} \\
@@ -330,12 +315,11 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 \texttt{USE\_SITE\_LAI} & 逻辑型 & 叶面积指数数据来源。默认\texttt{TRUE} \\
 \texttt{USE\_SITE\_lakedepth} & 逻辑型 & 湖泊深度数据来源。默认\texttt{TRUE} \\
 \texttt{USE\_SITE\_soilreflectance} & 逻辑型 & 土壤反射数据来源。默认\texttt{TRUE} \\
-\texttt{USE\_SITE\_soilparameters} & 逻辑型 & 土壤水力和热力参数数据来源。默认\texttt{TRUE} \\
+\texttt{USE\_SITE\_soilparameters} & 逻辑型 & 土壤水力、热力参数和土壤属性数据来源。默认\texttt{TRUE} \\
 \texttt{USE\_SITE\_dbedrock} & 逻辑型 & 基岩深度数据来源。默认\texttt{TRUE} \\
-\texttt{USE\_SITE\_topography} & 逻辑型 & 高程数据来源。默认\texttt{TRUE} \\
+\texttt{USE\_SITE\_topography} & 逻辑型 & 地形相关数据来源。默认\texttt{TRUE} \\
 \texttt{USE\_SITE\_urban\_geometry} & 逻辑型 & 城市建筑形态数据来源。默认\texttt{TRUE} \\
 & &（建筑高度、建筑比例、三维建筑高边长比（或者街谷高宽比）） \\
-\newpage
 \texttt{USE\_SITE\_urban\_ecology} & 逻辑型 & 城市生态数据来源。默认\texttt{TRUE} \\
 & &（树覆盖度、树高、树 LAI/SAI、水体覆盖度）\\
 \texttt{USE\_SITE\_urban\_radiation} & 逻辑型 & 城市辐射属性数据来源。默认\texttt{TRUE} \\
@@ -347,7 +331,7 @@ Namelist文件中的相关选项见表~\ref{table_nl_structure}。
 \midrule
 \textbf{4. 运行时的优化} & & \\
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\
-\texttt{USE\_SITE\_ForcingReadAhead} & 逻辑型 & 预先将所有大气驱动数据读入内存（\texttt{TRUE}）或实时读取（\texttt{FALSE}），默认\texttt{TRUE} \\
+\texttt{USE\_SITE\_ForcingReadAhead} & 逻辑型 & 当使用站点的气象观测资料驱动模式时，预先将所有大气驱动数据读入内存（\texttt{TRUE}）或实时读取（\texttt{FALSE}），默认\texttt{TRUE} \\
 \texttt{USE\_SITE\_HistWriteBack} & 逻辑型 & 输出内容暂存于内存（\texttt{TRUE}）或实时输出（\texttt{FALSE}），默认\texttt{TRUE} \\
 
 \end{longtable}
@@ -358,7 +342,7 @@ CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI
 
 卫星遥感LAI数据时间分辨率有每月或者每8天，在namelist文件中使用\texttt{DEF\allowbreak\_LAI\allowbreak\_MONTHLY}进行选择。
 
-当打开生物地球化学模块，设置\texttt{DEF\_USE\_LAIFEEDBACK}为\texttt{TRUE}，则使用模型所预测的叶面积指数，否则使用上述卫星遥感叶面积指数数据。
+当打开生物地球化学模块，设置\texttt{DEF\_USE\_LAIFEEDBACK}为\texttt{TRUE}时，使用模型所预测的叶面积指数，否则使用上述卫星遥感叶面积指数数据。
 
 具体设置见表~\ref{table_nl_lai}。
 
@@ -369,7 +353,7 @@ CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI
 \begin{tabular}{lcp{0.45\textwidth}}
 \toprule
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\\midrule
-\texttt{DEF\_LAI\_MONTHLY} & 逻辑型 & 使用叶面积指数月值数据(\texttt{TRUE})或每8天的数据(\texttt{FALSE})。默认为\texttt{TRUE}\\
+\texttt{DEF\_LAI\_MONTHLY} & 逻辑型 & 使用叶面积指数月值数据(\texttt{TRUE})或每8天的数据(\texttt{FALSE})。使用植被功能类型或植物群落次网格结构时，仅支持月值数据。默认为\texttt{TRUE}\\
 \texttt{DEF\_LAI\_CHANGE\_YEARLY}  & 逻辑型 & 使用逐年变化的叶面积指数数据（\texttt{TRUE}）或固定年份的数据（同地表覆盖数据的年份）。默认为\texttt{TRUE} \\
 \texttt{DEF\_LAI\_START\_YEAR} & 整型 & 叶面积指数数据开始年份。默认为2000\\
 \texttt{DEF\_LAI\_END\_YEAR} & 整型 & 叶面积指数数据结束年份。默认为2020\\
@@ -383,15 +367,15 @@ CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI
 
 模式可使用冷启动或者热启动的方式对土壤水热状态、积雪状态和碳氮状态进行初始化。
 
-土壤温度的初始化。使用冷启动时，将陆地冰川单元的土壤温度设置为253K，其他地表类型单元的土壤温度设置为283K。使用热启动时，从数据文件\texttt{DEF\_file\_SoilInit}中读入分层的土壤温度进行模式的初始化。
+土壤温度的初始化。使用冷启动时，将陆地冰川斑块的土壤温度设置为253K，其他地表类型斑块的土壤温度设置为283K。使用热启动时，从数据文件\texttt{DEF\_file\_SoilInit}中读入分层的土壤温度进行模式的初始化。
 
-土壤水的初始化。对土壤或城市地表类型，使用冷启动时，将土壤水设置为饱和，热启动的方式有两种：1）当有地下水位和分层的土壤含水量数据时（\texttt{DEF\_USE\_SoilInit}为\texttt{TRUE}），在地下水位以下，土壤水为饱和，在地下水位以上，使用数据进行赋值；2）当只有地下水位数据时（\texttt{DEF\_USE\_SoilInit}为\texttt{FALSE}但文件\texttt{DEF\_dir\_runtime}/wtd.nc存在），在地下水位以下，土壤水为饱和，在地下水位以上，使用基于地下水位的土壤水平衡态。对陆地冰川、湿地和湖泊地表类型，只使用冷启动的方式，将土壤水设置为饱和，地下水位设置为0。
+土壤水的初始化。对植被（含裸土）或城市斑块类型，使用冷启动时，将土壤水设置为饱和，热启动的方式有两种：1）当有地下水位和分层的土壤含水量数据时（\texttt{DEF\_USE\_SoilInit}为\texttt{TRUE}），从数据文件\texttt{DEF\_file\_SoilInit}中读入地下水位和分层的土壤湿度进行模式的初始化：在地下水位以下，土壤水为饱和，在地下水位以上，使用数据进行赋值；2）当只有地下水位数据时（\texttt{DEF\_USE\_SoilInit}为\texttt{FALSE}但DEF\_USE\_WaterTableInit为TRUE），从数据文件\texttt{DEF\_file\_WaterTable}中读入地下水位进行初始化：在地下水位以下，土壤水为饱和，在地下水位以上，使用基于地下水位的土壤水平衡态。对陆地冰川、湿地和湖泊斑块类型，只使用冷启动的方式，将土壤水设置为饱和，地下水位设置为0。
 
 土壤水的相态根据土壤温度的初值而定，当低于冻结温度时为固态冰，当高于冻结温度时为液态水。
 
-积雪的初始化。使用冷启动时，所有地表类型设置为无积雪覆盖，使用热启动时，由文件\texttt{DEF\_file\_SnowInit}中读入积雪深度进行初始化。
+积雪的初始化。使用冷启动时，所有地表类型设置为无积雪覆盖，使用热启动（DEF\_USE\_SnowInit为TRUE）时，由文件\texttt{DEF\_file\_SnowInit}中读入积雪深度进行初始化。
 
-生物地球化学循环变量初始化包括对植物和土壤碳氮库的初始赋值。冷启动时，假设生态系统从裸土开始演替，大部分植被和土壤碳氮库初始赋值为0，常绿植被功能型的叶碳库和落叶植被功能型的叶储存库初始赋值为100  \unit{gC.m^{-2}}用于生态系统的初始生长。热启动时，植被和土壤的初始碳氮状态来源于预热后的准平衡状态。预热通过循环使用1850年CO2浓度，CoLM默认配置，1910的ERA5气象驱动，持续运行200年而得到。
+生物地球化学循环变量初始化包括对植物和土壤碳氮库的初始赋值。冷启动时，假设生态系统从裸土开始演替，大部分植被和土壤碳氮库初始赋值为0，常绿植被功能型的叶碳库和落叶植被功能型的叶储存库初始赋值为100  \unit{gC.m^{-2}}用于生态系统的初始生长。热启动时，植被和土壤的初始碳氮状态来源于预热后的准平衡状态。预热通过循环使用1850年CO2浓度，CoLM默认配置，1910年的ERA5气象驱动，持续运行200年而得到。
 
 初始化使用的数据网格可与模式网格不同，模式会对读入的数据进行重采样，映射到模式计算单元。
 
@@ -406,6 +390,8 @@ CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI
 \textbf{变量名} & \textbf{数据类型} & \textbf{说明} \\\midrule
 \texttt{DEF\_USE\_SoilInit} & 逻辑型 & 是否使用数据对土壤水热状态进行初始化 \\
 \texttt{DEF\_file\_SoilInit} & 字符串 & 土壤水热状态数据存放的文件。其中土壤分层深度变量名为`soildepth'，土壤温度变量名为`soiltemp'，土壤水体积含量变量名为`soilwat'，地下水位变量名为`zwt' \\
+\texttt{DEF\_USE\_WaterTableInit} & 逻辑型 & 是否使用地下水位数据对土壤水状态进行初始化 \\
+\texttt{DEF\_file\_WaterTable} & 字符串 & 地下水位数据存放的文件。其中地下水位变量名为`wtd' \\
 \texttt{DEF\_USE\_SnowInit} & 逻辑型 & 是否使用数据对积雪的状态进行初始化 \\
 \texttt{DEF\_file\_SnowInit} & 字符串 & 积雪状态数据存放的文件。其中积雪深度变量名为`snowdepth' \\
 \texttt{DEF\_USE\_CN\_Init} & 逻辑型 & 是否用数据对植被土壤碳氮库进行初始化 \\
@@ -679,6 +665,32 @@ CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI
 & \textbf{变量名称} & tksatu\_l\textit{l} \\
 & \textbf{变量维度} & {[}lon, lat{]} \\
 & \textbf{变量含义} & 融化状态饱和土壤导热率 \\
+\cline{1-3}
+\textbf{文件} & \multicolumn{2}{l}{soil/vf\_clay\_s.nc, soil/vf\_sand\_s.nc, soil/vf\_gravels\_s.nc, soil/vf\_om\_s.nc, } \\
+ & \multicolumn{2}{l}{soil/vf\_quartz\_mineral\_s.nc} \\
+\cline{2-3}
+& \textbf{变量名称} & 分别为vf\_clay\_s\_l\textit{l}, vf\_sand\_s\_l\textit{l}, vf\_gravels\_s\_l\textit{l}, vf\_om\_s\_l\textit{l}, vf\_quartz\_mineral\_s\_l\textit{l} \\
+& \textbf{变量维度} & {[}lon, lat{]} \\
+& \textbf{变量含义} & 分别代表土壤中黏粒、砂粒、砾石、有机质和石英矿物的体积含量 \\
+\cline{1-3}
+\textbf{文件} & \multicolumn{2}{l}{soil/wf\_clay\_s.nc, soil/wf\_sand\_s.nc, soil/wf\_gravels\_s.nc, soil/wf\_om\_s.nc} \\
+\cline{2-3}
+& \textbf{变量名称} & 分别为wf\_clay\_s\_l\textit{l}, wf\_sand\_s\_l\textit{l}, wf\_gravels\_s\_l\textit{l}, wf\_om\_s\_l\textit{l} \\
+& \textbf{变量维度} & {[}lon, lat{]} \\
+& \textbf{变量含义} & 分别代表土壤中黏粒、砂粒、砾石和有机质的质量含量 \\
+\cline{1-3}
+\textbf{文件} & \multicolumn{2}{l}{soil/BD\_all\_s.nc} \\
+\cline{2-3}
+& \textbf{变量名称} & BD\_all\_s\_l\textit{l} \\
+& \textbf{变量维度} & {[}lon, lat{]} \\
+& \textbf{变量含义} & 土壤容重 \\
+\cline{1-3}
+\textbf{文件} & \multicolumn{2}{l}{soil/OM\_density\_s.nc} \\
+\cline{2-3}
+& \textbf{变量名称} & OM\_density\_s\_l\textit{l} \\
+& \textbf{变量维度} & {[}lon, lat{]} \\
+& \textbf{变量含义} & 有机质密度 \\
+
 
 \midrule
 \vspace{2\baselineskip}\\
@@ -702,7 +714,7 @@ CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI
 \vspace{2\baselineskip}\\
  \multicolumn{3}{l}{\textbf{8. 基岩深度}} \\
 \cline{1-3}
-\textbf{文件} & \multicolumn{2}{l}{dbedrock.nc} \\
+\textbf{文件} & \multicolumn{2}{l}{bedrock.nc} \\
 \cline{2-3}
 & \textbf{变量名称} & dbedrock \\
 & \textbf{变量维度} & {[}lon, lat{]} \\
@@ -866,7 +878,7 @@ CoLM可使用固定年或者逐年变化的卫星遥感叶面积指数数据(LAI
 \texttt{DEF\_Forcing\%lonname} & 字符串 & 大气驱动数据的经度信息变量名 \\
 \texttt{DEF\_Forcing\%groupby} & 字符串 & 大气驱动数据文件内数据的组织方式（如设为month表示每个文件存储一个月的数据） \\
 \texttt{DEF\_Forcing\%fprefix(8)} & 字符串数组 & 相对\texttt{DEF\_dir\_forcing}的文件存储路径及文件名通用前缀。对数组中的8个变量(近地面温度、比湿、气压、降水率、纬向风速、经向风速、下行短波辐射、下行长波辐射)按顺序分别设置，缺失的变量设为NULL \\
-\texttt{DEF\_Forcing\%timelog(8)} & 字符串数组 & 强迫变量记录的时间方式。`$instant$'表示瞬时值，`$foreword$'表示该时间点向前记录的1个时间步长的平均值，`$backward$'表示该时间点向后记录的1个时间步长的平均值 \\
+\texttt{DEF\_Forcing\%timelog(8)} & 字符串数组 & 强迫变量记录的时间方式。`$instant$'表示瞬时值，`$forword$'表示该时间点向前记录的1个时间步长的平均值，`$backward$'表示该时间点向后记录的1个时间步长的平均值 \\
 \texttt{DEF\_Forcing\%vname(8)}  & 字符串数组 & 大气驱动变量在文件中的变量名。按照温度(K)、比湿(\unit{kg.kg^{-1}})、气压(Pa)、降水率(\unit{mm.s^{-1}})、纬向风速(\unit{m.s^{-1}})、经向风速(\unit{m.s^{-1}})、下行短波辐射(\unit{W.m^{-2}})、下行长波辐射(\unit{W.m^{-2}})的顺序依次设置，缺失的变量设为NULL \\
 \texttt{DEF\_Forcing\%tintalgo(8)} & 字符串数组 & 大气驱动变量在模式中的时间维插值方案。按照温度、比湿、气压、降水率、纬向风速、经向风速、下行短波辐射、下行长波辐射的顺序依次设置。目前默认的方案为温度、比湿、气压、风速和下行长波辐射采用线性插值方案(`$linear$')，降水率采用临近时刻插值方案(`$nearest$')，下行短波辐射采用根据太阳高度角的余弦插值方案(`$coszen$')。缺失的变量设为NULL \\
 \texttt{DEF\_Forcing\%CBL\_fprefix} & 字符串 & fprefix同上，对于大气边界层高度 \\
@@ -934,7 +946,7 @@ TPMFD & 0.0333°/3-hourly & 1979-2021 & \makecell{青藏高原
 
 \subsection{namelist文件中的设置}
 
-对于全球或区域模拟，模式均可以经纬度网格的形式输出模拟结果。对流域单元网格和非结构网格，还可将定义在不规则单元上的值以向量的形式输出。以经纬度网格输出模拟结果时，网格的分辨率可以任意设置，不需与模拟单元的分辨率或者大气驱动的分辨率一致，模式会自动将模拟结果映射到输出网格上。与输出模拟结果相关的namelist配置见表~\ref{table_nl_history}。
+对于全球或区域模拟，模式均可以经纬度网格的形式输出模拟结果。对流域单元网格和非结构网格，还可将定义在不规则单元上的值以无结构的向量数据形式输出。以经纬度网格输出模拟结果时，网格的分辨率可以任意设置，不需与模拟单元的分辨率或者大气驱动的分辨率一致，模式会自动将模拟结果映射到输出网格上。与输出模拟结果相关的namelist配置见表~\ref{table_nl_history}。
 
 {\small
 \begin{longtable}[htbp]{lcp{0.42\textwidth}}
@@ -953,7 +965,7 @@ TPMFD & 0.0333°/3-hourly & 1979-2021 & \makecell{青藏高原
 \bottomrule
 \endlastfoot
 
-\texttt{DEF\_HISTORY\_IN\_VECTOR} & 逻辑型 & 对\textbf{流域单元网格}和\textbf{非结构网格}，以向量的形式输出历史文件（\texttt{TRUE}），或者以经纬度格点数据的形式输出历史文件（\texttt{FALSE}）。默认为\texttt{FALSE} \\
+\texttt{DEF\_HISTORY\_IN\_VECTOR} & 逻辑型 & 对\textbf{流域单元网格}和\textbf{非结构网格}，以无结构的向量数据形式输出历史文件（\texttt{TRUE}），或者以经纬度格点数据的形式输出历史文件（\texttt{FALSE}）。默认为\texttt{FALSE} \\
 \texttt{DEF\_HIST\_grid\_as\_forcing} & 逻辑型 & 值为\texttt{TRUE}时，使用与驱动数据相同的网格输出模拟结果。仅在以经纬度网格输出模拟结果时有效。默认为\texttt{FALSE} \\
 \texttt{DEF\_HIST\_lon\_res} & 浮点型 & 以经纬度网格输出模拟结果时的经度方向分辨率。仅在不使用与驱动数据相同的网格时有效。默认为0.5\textdegree \\
 \texttt{DEF\_HIST\_lat\_res} & 浮点型 & 以经纬度网格输出模拟结果时的纬度方向分辨率。仅在不使用与驱动数据相同的网格时有效。默认为0.5\textdegree \\
@@ -962,7 +974,7 @@ TPMFD & 0.0333°/3-hourly & 1979-2021 & \makecell{青藏高原
 \texttt{DEF\_HIST\_mode} & 字符串 & 数据文件的组织形式，值为~`one'时，模式将模拟区域的数据拼接完整后输出，值为~`block'时，模式将每块数据输出到单独的文件中。默认为`one'\\
 \texttt{DEF\_HIST\_COMPRESS\_LEVEL} & 整型 & 变量历史文件的压缩级别，可选从0到9的整数，0表示不压缩，数字越大代表压缩比越高；对于高压缩比，压缩或者解压所需的时间也会更长。默认为1 \\
 \texttt{DEF\_HIST\_WriteBack} & 逻辑型 & 值为\texttt{TRUE}时，使用单独的回写文件进程进行历史数据的输出，IO进程采用非阻塞的方式向回写进程发送数据，可减少由较慢的写文件速度造成的等待。默认为\texttt{FALSE} \\
-\texttt{DEF\_HIST\_vars} & 自定义类型 & 其元素为定义是否输出变量的开关，元素名为输出变量的名字，元素的数据类型为逻辑性，真值代表输出，假值代表不输出；变量列表见第~\ref{sec_hist_vars_basic}--\ref{sec_hist_vars_crop}节 \\
+\texttt{DEF\_HIST\_vars} & 自定义类型 & 其元素为定义是否输出变量的开关，元素名为输出变量的名字，元素的数据类型为逻辑型，真值代表输出，假值代表不输出；变量列表见第~\ref{sec_hist_vars_basic}--\ref{sec_hist_vars_crop}节 \\
 \texttt{DEF\_HIST\_vars\_out\_default} & 逻辑型 & 所有变量开关的默认值，值为\texttt{TRUE}时全部输出，值为\texttt{FALSE}时全部不输出；默认值会被文件\texttt{DEF\_HIST\_vars\_namelist}中的变量开关的值修改。默认为\texttt{TRUE} \\
 \texttt{DEF\_HIST\_vars\_namelist} & 字符串 & 变量开关的namelist文件；输出变量开关的列表较长时，可将其放置在此独立的文件中，namelist的名称为nl\_colm\_history，文件中的开关值会覆盖由\texttt{DEF\_HIST\_vars\_out\_default}定义的默认值 \\
 \end{longtable}}
@@ -1027,9 +1039,11 @@ zerr & 能量平衡误差 & {[}lon, lat, time{]}  & \unit{W.m^{-2}} \\
 rsur & 地表产流 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
 rsur\_se & 地表蓄满产流 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
 rsur\_ie & 地表超渗产流 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
+rsub & 地下产流 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
+rnof & 总产流 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
 xwsur & 因侧向流产生的地表水变化 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
 xwsub & 因侧向流产生的地下水变化 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
-rnof & 总产流 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
+fldarea & 水体面积占比 & {[}lon, lat, time{]}  & \unit{-} \\
 qintr & 植被截留水通量 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
 qinfl & 土壤入渗水通量 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
 qdrip & 植被穿透水通量 & {[}lon, lat, time{]}  & \unit{mm.s^{-1}} \\
@@ -1266,8 +1280,8 @@ sminn\_vr & 无机氮 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
 totsoiln\_vr & 土壤总氮含量 & {[}soil, lon, lat, time{]}  & \unit{\%(gN/gSoil\times100)} \\
 ndep\_to\_sminn & 大气氮沉降 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}.s^{-1}} \\
 xy\_ozone & 大气臭氧浓度 & {[}lon, lat, time{]}  & \unit{mol.mol^{-1}} \\
-Conc\_O2 & 非淹没区的土壤氧气浓度 & {[}soil, lon, lat, time{]} & \unit{mol.m^{-3}} \\
-O2\_Consume & 非淹没区的土壤氧气消耗 & {[}soil, lon, lat, time{]} & \unit{mol.m^{-3}.s^{-1}} \\
+CONC\_O2\_UNSAT & 非淹没区的土壤氧气浓度 & {[}soil, lon, lat, time{]} & \unit{mol.m^{-3}} \\
+O2\_DECOMP\_DEPTH\_UNSAT & 非淹没区的土壤氧气消耗 & {[}soil, lon, lat, time{]} & \unit{mol.m^{-3}.s^{-1}} \\
 abm & 作物火灾峰值月份 & {[}lon, lat, time{]} & - \\
 gdp & 国民生产总值 & {[}lon, lat, time{]} & \unit{kUS\$.capita^{-1}}\\
 peatf & 泥炭地比例 & {[}lon, lat, time{]} & - \\
@@ -1311,7 +1325,58 @@ totlitn & 总凋落物氮含量 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
 totsomn & 总土壤有机质氮含量 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
 totcwdn & 总粗木质部残体氮含量 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
 totcoln & 总生态系统氮含量 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
-
+leafcCap & 叶碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+leafc\_storageCap & 叶储存碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+leafc\_xferCap & 叶传输碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+frootcCap & 细根碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+frootc\_storageCap& 细根储存碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+frootc\_xferCap & 细根传输碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+livestemcCap & 活茎碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+livestemc\_storageCap & 活茎储存碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+livestemc\_xferCap & 活茎传输碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+deadstemcCap & 死茎碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+deadstemc\_storageCap  & 死茎储存碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+deadstemc\_xferCap & 死茎传输碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+livecrootcCap & 活粗根碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+livecrootc\_storageCap & 活粗根储存碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+livecrootc\_xferCap   & 活粗根传输碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+deadcrootcCap     & 死粗根碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+deadcrootc\_storageCap & 死粗根储存碳库理论平衡态 & {[}lon, lat, time{]}  & \unit{gC.m^{-2}} \\
+deadcrootc\_xferCap   & 死粗根传输碳库理论平衡态 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
+leafnCap        & 叶氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+leafn\_storageCap    & 叶储存氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+leafn\_xferCap     & 叶传输氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+frootnCap       & 细根氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+frootn\_storageCap   & 细根储存氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+frootn\_xferCap     & 细根传输氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+livestemnCap      & 活茎氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+livestemn\_storageCap  & 活茎储存氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+livestemn\_xferCap   & 活茎传输氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+deadstemnCap      & 死茎氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+deadstemn\_storageCap  & 死茎储存氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+deadstemn\_xferCap   & 死茎传输氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+livecrootnCap & 活粗根氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+livecrootn\_storageCap & 活粗根储存氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+livecrootn\_xferCap & 活粗根传输氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+deadcrootnCap & 死粗根氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+deadcrootn\_storageCap & 死粗根储存氮库理论平衡态 & {[}lon, lat, time{]} & \unit{gN.m^{-2}} \\
+deadcrootn\_xferCap & 死粗根传输氮库理论平衡态 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
+litr1cCap\_vr & 代谢凋落物碳理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gC.m^{-3}} \\
+litr2cCap\_vr & 纤维素凋落物碳理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gC.m^{-3}} \\
+litr3cCap\_vr & 木质素凋落物碳理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gC.m^{-3}} \\
+soil1cCap\_vr & 快速周转土壤碳理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gC.m^{-3}} \\
+soil2cCap\_vr & 慢速周转土壤碳理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gC.m^{-3}} \\
+soil3cCap\_vr & 惰性土壤碳理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gC.m^{-3}} \\
+cwdcCap\_vr & 粗木质残体碳理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gC.m^{-3}} \\
+litr1nCap\_vr & 代谢凋落物氮理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
+litr2nCap\_vr & 纤维素凋落物氮理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
+litr3nCap\_vr & 木质素凋落物氮理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
+soil1nCap\_vr & 快速周转土壤氮理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
+soil2nCap\_vr & 慢速周转土壤氮理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
+soil3nCap\_vr & 惰性土壤氮理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
+cwdnCap\_vr & 粗木质残体氮理论平衡态 & {[}soil, lon, lat, time{]}  & \unit{gN.m^{-3}} \\
+t\_scalar & 土壤有机质分解温度因子 & {[}soil, lon, lat, time{]}  & - \\
+w\_scalar & 土壤有机质分解水分因子 & {[}soil, lon, lat, time{]}  & - \\
 \end{longtable}}
 
 \subsection{作物模式输出变量}\label{sec_hist_vars_crop}
@@ -1340,7 +1405,7 @@ cphase & 作物物候阶段 & {[}lon, lat, time{]}  & - \\
 gddpmaturity & 作物成熟积温 & {[}lon, lat, time{]} & ddays \\
 gddplant & 种植日期后的积温 & {[}lon, lat, time{]} & ddays \\
 vf & 作物春化响应因子 & {[}lon, lat, time{]} & - \\
-hui & 作物热单位因子  & {[}lon, lat, time{]} & - \\
+% hui & 作物热单位因子  & {[}lon, lat, time{]} & - \\
 cropprod1c & 作物产物碳 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} \\
 cropprod1c\_loss & 作物产物碳消耗 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
 cropseedc\_deficit & 作物种子碳亏缺 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
@@ -1352,15 +1417,15 @@ grainc\_xfer     & 谷粒传输碳库 & {[}lon, lat, time{]} & \unit{gC.m^{-2}} 
 grainn & 谷粒氮库 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
 grainn\_storage & 谷粒储存氮库 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
 grainn\_xfer & 谷粒传输氮库 & {[}lon, lat, time{]}  & \unit{gN.m^{-2}} \\
-cphase & 作物物候阶段 & {[}lon, lat, time{]} & \- \\
+% cphase & 作物物候阶段 & {[}lon, lat, time{]} & \- \\
 hui & 作物成熟度 & {[}lon, lat, time{]} & - \\
 huiswheat & 春小麦成熟度 & {[}lon, lat, time{]} & - \\
-gddmaturity & 作物成熟积温点 & {[}lon, lat, time{]} & \unit{degree.days} \\
-gddplant & 作物种植后积温 & {[}lon, lat, time{]} & \unit{degree.days} \\
-vf & 春化响应指数 & {[}lon, lat, time{]} & - \\
-cropseedc\_deficit & 作物种子碳亏缺 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-grainc\_to\_cropprodc & 作物果实瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-grainc\_to\_seedc & 作物种子瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+% gddmaturity & 作物成熟积温点 & {[}lon, lat, time{]} & \unit{degree.days} \\
+% gddplant & 作物种植后积温 & {[}lon, lat, time{]} & \unit{degree.days} \\
+% vf & 春化响应指数 & {[}lon, lat, time{]} & - \\
+% cropseedc\_deficit & 作物种子碳亏缺 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+% grainc\_to\_cropprodc & 作物果实瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+% grainc\_to\_seedc & 作物种子瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
 fert\_to\_sminn & 施肥含氮量 & {[}lon, lat, time{]} & \unit{gN.m^{-2}.s^{-1}} \\
 irrig\_rate & 灌溉瞬时速率 & {[}lon, lat, time{]} & \unit{mm.s^{-1}} \\
 deficit\_irrig & 灌溉缺水量 & {[}lon, lat, time{]} & \unit{kg.m^{-2}} \\
@@ -1382,48 +1447,48 @@ irrig\_method\_cotton & 棉花灌溉方式 & {[}lon, lat, time{]} & - \\
 irrig\_method\_rice1 & 单季稻灌溉方式 & {[}lon, lat, time{]} & - \\
 irrig\_method\_ricd2 & 双季稻灌溉方式 & {[}lon, lat, time{]} & - \\
 irrig\_method\_sugarcane & 甘蔗稻灌溉方式 & {[}lon, lat, time{]} & - \\
-pd\_rain\_temp\_corn & 雨养温带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_temp\_corn & 灌溉温带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_spwheat & 雨养春小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_spwheat & 灌溉春小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_wtwheat & 雨养冬小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_wtwheat & 灌溉冬小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_temp\_soybean & 雨养温带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_temp\_soybean & 灌溉温带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_cotton & 雨养棉花播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_cotton & 灌溉棉花播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_rice & 雨养水稻播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_rice & 灌溉水稻播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_sugarcane & 雨养甘蔗播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_sugarcane & 灌溉甘蔗播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_trop\_corn & 雨养热带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_trop\_corn & 灌溉热带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_rain\_trop\_soybean & 雨养热带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_irrig\_trop\_soybean & 灌溉热带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-pd\_unmanagedcrop & 无管理农田播种日期 & {[}lon, lat, time{]} & \unit{day} \\
-prodc\_rain\_temp\_corn & 雨养温带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_temp\_corn & 灌溉温带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_spwheat & 雨养春小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_spwheat & 灌溉春小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_wtwheat & 雨养冬小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_wtwheat & 灌溉冬小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_temp\_soybean & 雨养温带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_temp\_soybean & 灌溉温带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_cotton & 雨养棉花瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_cotton & 灌溉棉花瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_rice & 雨养水稻瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_rice & 灌溉水稻瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_sugarcane & 雨养甘蔗瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_sugarcane & 灌溉甘蔗瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_trop\_corn & 雨养热带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_trop\_corn & 灌溉热带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_rain\_trop\_soybean & 雨养热带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_irrig\_trop\_soybean & 灌溉热带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
-prodc\_unmanagedcrop & 无管理农田瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+plantdate\_rainfed\_temp\_corn & 雨养温带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_temp\_corn & 灌溉温带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_spwheat & 雨养春小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_spwheat & 灌溉春小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_wtwheat & 雨养冬小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_wtwheat & 灌溉冬小麦播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_temp\_soybean & 雨养温带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_temp\_soybean & 灌溉温带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_cotton & 雨养棉花播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_cotton & 灌溉棉花播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_rice & 雨养水稻播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_rice & 灌溉水稻播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_sugarcane & 雨养甘蔗播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_sugarcane & 灌溉甘蔗播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_trop\_corn & 雨养热带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_trop\_corn & 灌溉热带玉米播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_rainfed\_trop\_soybean & 雨养热带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_irrigated\_trop\_soybean & 灌溉热带大豆播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+plantdate\_unmanagedcrop & 无管理农田播种日期 & {[}lon, lat, time{]} & \unit{day} \\
+cropprodc\_rainfed\_temp\_corn & 雨养温带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_temp\_corn & 灌溉温带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_spwheat & 雨养春小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_spwheat & 灌溉春小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_wtwheat & 雨养冬小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_wtwheat & 灌溉冬小麦瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_temp\_soybean & 雨养温带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_temp\_soybean & 灌溉温带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_cotton & 雨养棉花瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_cotton & 灌溉棉花瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_rice & 雨养水稻瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_rice & 灌溉水稻瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_sugarcane & 雨养甘蔗瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_sugarcane & 灌溉甘蔗瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_trop\_corn & 雨养热带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_trop\_corn & 灌溉热带玉米瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_rainfed\_trop\_soybean & 雨养热带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_irrigated\_trop\_soybean & 灌溉热带大豆瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
+cropprodc\_unmanagedcrop & 无管理农田瞬时产量 & {[}lon, lat, time{]} & \unit{gC.m^{-2}.s^{-1}} \\
 \end{longtable}}
 
 \section{径流模型CaMa-Flood}
-关于CaMa-Flood运行时所用到的设定可在run目录下的CaMa-Flood.nml中进行修改。以下对此进行详细介绍。
+关于CaMa-Flood运行时所用到的设定可在CaMa-Flood.nml（或其它文件名）中进行修改，使用DEF\_CaMa\_Namelist指定CaMa-Flood.nml（或其它文件名）的位置。以下对此进行详细介绍。
 \subsection{运行时参数}
 模式运行参数是模型的核心设置,它们决定了模型在执行过程中的基本行为和能力。主要的设定详见表~\ref{模式运行参数设定}。
 
