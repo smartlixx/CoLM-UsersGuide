@@ -4,6 +4,7 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage[UTF8,heading=true,scheme=chinese]{ctex}
 \usepackage{fancyhdr}
+\usepackage{fontspec}
 %\usepackage[nottoc]{tocbibind} % used to add bibliography to toc with correct bookmark and page number
 
 %\usepackage[T1]{fontenc}
@@ -11,6 +12,7 @@
 \newcommand{\courier}[1]{{\fontencoding{T1}\usefont{T1}{pcr}{m}{n}{#1}}}
 \newcommand{\Times}[1]{{\fontencoding{T1}\usefont{T1}{ptm}{m}{n}{#1}}}
 \newcommand{\Rom}[1]{{\fontencoding{T1}\usefont{T1}{cmr}{m}{n}{#1}}}
+\newfontfamily\chinesefont{Noto Serif CJK SC}
 % \usepackage{wasysym}
 
 \input{CoLM.preamble}
@@ -37,7 +39,7 @@
 \definecolor{bg}{RGB}{240,240,240}
 
 \lstset{
-  basicstyle=\small\ttfamily,
+  basicstyle=\fontspec{Courier New}\small,
 %  columns=flexible,
   breaklines=true,
   backgroundcolor=\color{bg},

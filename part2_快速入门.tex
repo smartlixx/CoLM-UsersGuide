@@ -59,7 +59,8 @@ CoLM在Linux操作系统下运行，其软件需求为：
 \end{quote}
 
 以下文件内容给出了一个典型环境下的软件配置（使用GNU编译器），文件位于\texttt{\$CoLMRoot/include/\allowbreak Makeopitons}：
-\begin{lstlisting}[language=bash, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
+\begin{lstlisting}[language=bash, basicstyle=\linespread{1.2}\footnotesize\fontspec{Courier New},
+literate={设置编译器}{{{\chinesefont 设置编译器}}}1, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
 # An example of file '$CoLMRoot/include/Makeoptions'.
 
 # 设置编译器
@@ -107,7 +108,7 @@ CoLM通过以下两个文件对一个模式实例进行设置，
 \end{quote}
 
 一个最简单的\texttt{define.h}文件的示例如下，
-\begin{lstlisting}[language=fortran, basicstyle=\linespread{1.2}\footnotesize\ttfamily, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
+\begin{lstlisting}[language=fortran, basicstyle=\linespread{1.2}\footnotesize\fontspec{Courier New}, commentstyle=\color{black}, numbers=left, numberstyle=\tiny, xleftmargin=1.5em,xrightmargin=0em, aboveskip=1em]
 ! 使用“经纬度网格”单元
 #define GRIDBASED
 ! 使用“地表覆盖类型”表征次网格单元
